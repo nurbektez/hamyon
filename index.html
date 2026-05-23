@@ -2,844 +2,671 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hamyon</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-  :root {
-    --bg: #0A0E1A;
-    --bg2: #111827;
-    --bg3: #1C2333;
-    --card: #161D2E;
-    --border: rgba(255,255,255,0.08);
-    --text: #FFFFFF;
-    --text2: rgba(255,255,255,0.55);
-    --text3: rgba(255,255,255,0.3);
-    --green: #00D085;
-    --green-bg: rgba(0,208,133,0.12);
-    --blue: #3B82F6;
-    --blue-bg: rgba(59,130,246,0.12);
-    --yellow: #F59E0B;
-    --yellow-bg: rgba(245,158,11,0.12);
-    --red: #EF4444;
-    --red-bg: rgba(239,68,68,0.12);
-    --radius: 16px;
-    --radius-sm: 10px;
-  }
+:root {
+  --teal: #00BCD4;
+  --teal-dark: #00ACC1;
+  --teal-light: #E0F7FA;
+  --green: #00C853;
+  --red: #F44336;
+  --bg: #F5F7FA;
+  --white: #FFFFFF;
+  --text: #1A1A2E;
+  --text2: #666680;
+  --text3: #B0B0C0;
+  --border: #E8EAF0;
+  --shadow: 0 2px 12px rgba(0,188,212,0.10);
+  --radius: 18px;
+  --radius-sm: 12px;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    padding-bottom: 90px;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 80px;
+  overflow-x: hidden;
+}
 
-  /* ── TOP BAR ── */
-  .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-  }
-  .topbar-title { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
-  .topbar-rate {
-    font-size: 12px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 10px;
-    color: var(--text2);
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .topbar-rate:active { background: var(--bg2); }
-  .topbar-rate span { color: var(--yellow); font-weight: 600; }
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+  padding: 20px 20px 32px;
+  position: relative;
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.header-title { font-size: 18px; font-weight: 700; color: #fff; }
+.header-sub   { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+.header-icon  {
+  width: 38px; height: 38px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer;
+}
 
-  /* ── TOTAL BALANCE ── */
-  .total-section {
-    padding: 24px 20px 20px;
-    text-align: center;
-  }
-  .total-label { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
-  .total-amount {
-    font-size: 38px;
-    font-weight: 700;
-    letter-spacing: -1px;
-    line-height: 1;
-    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .total-sub { font-size: 13px; color: var(--text3); margin-top: 6px; }
+.balance-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 0 16px;
+  margin-top: -16px;
+  box-shadow: var(--shadow);
+  position: relative;
+  z-index: 10;
+}
+.balance-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.balance-total { font-size: 30px; font-weight: 800; color: var(--text); letter-spacing: -1px; }
+.balance-divider { height: 1px; background: var(--border); margin: 14px 0; }
+.balance-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.balance-row:last-child { margin-bottom: 0; }
+.bal-left { display: flex; align-items: center; gap: 10px; }
+.bal-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.bal-dot.som  { background: var(--green); }
+.bal-dot.usd  { background: var(--teal); }
+.bal-dot.card { background: #FF9800; }
+.bal-name { font-size: 13px; color: var(--text2); }
+.bal-amount { font-size: 14px; font-weight: 700; color: var(--text); }
 
-  /* ── ACTION BUTTONS ── */
-  .actions {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 0 20px 24px;
-  }
-  .action-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 8px;
-    cursor: pointer;
-    transition: transform 0.15s, background 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .action-btn:active { transform: scale(0.94); background: var(--bg3); }
-  .action-icon {
-    width: 40px; height: 40px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
-  .action-btn span { font-size: 11px; color: var(--text2); font-weight: 500; }
-  .action-btn.kirim .action-icon  { background: var(--green-bg); color: var(--green); }
-  .action-btn.chiqim .action-icon { background: var(--red-bg); color: var(--red); }
-  .action-btn.konvert .action-icon { background: var(--blue-bg); color: var(--blue); }
-  .action-btn.otkazma .action-icon { background: var(--yellow-bg); color: var(--yellow); }
+/* ── MONTHLY STATS ── */
+.stats-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; padding: 16px 16px 0;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.stat-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+.stat-amount { font-size: 16px; font-weight: 700; }
+.stat-amount.green { color: var(--green); }
+.stat-amount.red   { color: var(--red); }
 
-  /* ── CARDS ── */
-  .section-title {
-    font-size: 13px;
-    color: var(--text2);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    padding: 0 20px 12px;
-  }
-  .accounts { display: flex; flex-direction: column; gap: 10px; padding: 0 20px 28px; }
+/* ── ACTION BUTTONS ── */
+.actions {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; padding: 16px;
+}
+.action-btn {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 14px 8px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.15s;
+  border: none;
+}
+.action-btn:active { transform: scale(0.94); }
+.action-ico {
+  width: 42px; height: 42px;
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.action-ico.chiqim  { background: #FFF0F0; }
+.action-ico.konvert { background: #E0F7FA; }
+.action-ico.otkazma { background: #FFF8E1; }
+.action-label { font-size: 11px; color: var(--text2); font-weight: 500; }
 
-  .account-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    cursor: pointer;
-    transition: transform 0.15s, background 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .account-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    border-radius: 3px 0 0 3px;
-  }
-  .account-card.som::before   { background: var(--green); }
-  .account-card.usd::before   { background: var(--blue); }
-  .account-card.card::before  { background: var(--yellow); }
-  .account-card:active { transform: scale(0.98); background: var(--bg3); }
+/* ── SECTION TITLE ── */
+.section-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--text); padding: 4px 16px 10px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.section-title span { font-size: 12px; color: var(--teal); font-weight: 500; }
 
-  .acc-icon {
-    width: 46px; height: 46px;
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-  .account-card.som  .acc-icon { background: var(--green-bg); }
-  .account-card.usd  .acc-icon { background: var(--blue-bg); }
-  .account-card.card .acc-icon { background: var(--yellow-bg); }
+/* ── HISTORY ── */
+.history { padding: 0 16px; }
+.day-group { margin-bottom: 8px; }
+.day-label {
+  font-size: 12px; color: var(--text2);
+  padding: 6px 0 4px;
+  display: flex; justify-content: space-between;
+}
+.day-label .day-total { font-size: 12px; }
+.day-total.plus  { color: var(--green); }
+.day-total.minus { color: var(--red); }
 
-  .acc-info { flex: 1; }
-  .acc-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-  .acc-sub  { font-size: 12px; color: var(--text3); }
+.h-item {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.h-ico {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.h-ico.kirim   { background: #E8F5E9; }
+.h-ico.chiqim  { background: #FFEBEE; }
+.h-ico.konvert { background: #E0F7FA; }
+.h-ico.otkazma { background: #FFF8E1; }
+.h-info { flex: 1; min-width: 0; }
+.h-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h-sub   { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.h-right { text-align: right; flex-shrink: 0; }
+.h-amount { font-size: 14px; font-weight: 700; }
+.h-amount.plus  { color: var(--green); }
+.h-amount.minus { color: var(--red); }
+.h-amount.swap  { color: var(--teal); }
+.h-time { font-size: 11px; color: var(--text3); margin-top: 2px; }
 
-  .acc-balance { text-align: right; }
-  .acc-amount  { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; }
-  .acc-amount.som  { color: var(--green); }
-  .acc-amount.usd  { color: var(--blue); }
-  .acc-amount.card { color: var(--yellow); }
-  .acc-equivalent  { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.empty-msg {
+  text-align: center; color: var(--text3);
+  font-size: 14px; padding: 32px 0;
+}
 
-  /* ── HISTORY ── */
-  .history { padding: 0 20px; }
-  .history-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .history-item:last-child { border-bottom: none; }
-  .h-icon {
-    width: 38px; height: 38px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .h-icon.kirim   { background: var(--green-bg); }
-  .h-icon.chiqim  { background: var(--red-bg); }
-  .h-icon.konvert { background: var(--blue-bg); }
-  .h-icon.otkazma { background: var(--yellow-bg); }
-  .h-info { flex: 1; }
-  .h-title { font-size: 14px; font-weight: 500; }
-  .h-date  { font-size: 12px; color: var(--text3); margin-top: 1px; }
-  .h-amount { font-size: 15px; font-weight: 700; }
-  .h-amount.plus  { color: var(--green); }
-  .h-amount.minus { color: var(--red); }
-  .h-amount.swap  { color: var(--blue); }
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 8px 0 env(safe-area-inset-bottom, 8px);
+  z-index: 100;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  padding: 6px 0;
+  cursor: pointer; border: none; background: none;
+  transition: opacity 0.2s;
+}
+.nav-item:active { opacity: 0.6; }
+.nav-ico { font-size: 20px; }
+.nav-label { font-size: 10px; color: var(--text3); font-weight: 500; }
+.nav-item.active .nav-label { color: var(--teal); }
+.nav-item.active .nav-ico { filter: none; }
 
-  /* ── MODAL ── */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    display: none;
-    align-items: flex-end;
-    backdrop-filter: blur(4px);
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2);
-    border-radius: 24px 24px 0 0;
-    border: 1px solid var(--border);
-    padding: 0 20px 40px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  @keyframes slideUp {
-    from { transform: translateY(100%); opacity: 0; }
-    to   { transform: translateY(0);   opacity: 1; }
-  }
-  .modal-handle {
-    width: 40px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 12px auto 20px;
-  }
-  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+/* ── MODAL ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  backdrop-filter: blur(3px);
+}
+.overlay.open { display: flex; }
+.sheet {
+  background: var(--white);
+  border-radius: 24px 24px 0 0;
+  padding: 0 20px 40px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  animation: up 0.3s cubic-bezier(0.34,1.4,0.64,1);
+}
+@keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto 18px; }
+.sheet-title { font-size: 17px; font-weight: 700; margin-bottom: 18px; }
 
-  /* ── FORM ── */
-  .form-label { font-size: 13px; color: var(--text2); margin-bottom: 8px; }
-  .form-group { margin-bottom: 16px; }
-  .acc-select-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
-  .acc-select-item {
-    background: var(--bg3);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .acc-select-item.active {
-    border-color: var(--green);
-    background: var(--green-bg);
-  }
-  .acc-select-item .emoji { font-size: 20px; margin-bottom: 4px; }
-  .acc-select-item .label { font-size: 11px; color: var(--text2); font-weight: 500; }
-  .acc-select-item.active .label { color: var(--green); }
+/* ── FORM ── */
+.f-label { font-size: 13px; color: var(--text2); margin-bottom: 6px; font-weight: 500; }
+.f-group { margin-bottom: 14px; }
+.acc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+.acc-item {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--white);
+}
+.acc-item.active { border-color: var(--teal); background: var(--teal-light); }
+.acc-item .e { font-size: 20px; margin-bottom: 3px; }
+.acc-item .l { font-size: 11px; color: var(--text2); }
+.acc-item.active .l { color: var(--teal-dark); font-weight: 600; }
 
-  input[type="number"], input[type="text"] {
-    width: 100%;
-    background: var(--bg3);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-size: 24px;
-    font-weight: 700;
-    padding: 14px 16px;
-    outline: none;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-  }
-  input[type="number"]:focus, input[type="text"]:focus {
-    border-color: var(--green);
-  }
-  input[type="number"]::placeholder, input[type="text"]::placeholder {
-    color: var(--text3);
-    font-weight: 400;
-    font-size: 18px;
-  }
-  input.comment-input { font-size: 15px; font-weight: 400; }
+input[type=number], input[type=text] {
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 22px;
+  font-weight: 700;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+input:focus { border-color: var(--teal); }
+input::placeholder { color: var(--text3); font-weight: 400; font-size: 16px; }
 
-  .submit-btn {
-    width: 100%;
-    background: var(--green);
-    color: #000;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 16px;
-    font-weight: 700;
-    padding: 16px;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: opacity 0.2s, transform 0.15s;
-  }
-  .submit-btn:active { opacity: 0.85; transform: scale(0.98); }
-  .submit-btn.danger { background: var(--red); color: #fff; }
-  .submit-btn.blue   { background: var(--blue); color: #fff; }
-  .submit-btn.yellow { background: var(--yellow); color: #000; }
+.dir-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.dir-item {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  background: var(--white);
+  transition: all 0.2s;
+}
+.dir-item.active { border-color: var(--teal); background: var(--teal-light); color: var(--teal-dark); }
 
-  .dir-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
-  .dir-item {
-    background: var(--bg3);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text2);
-  }
-  .dir-item.active { border-color: var(--blue); background: var(--blue-bg); color: var(--blue); }
+.bal-hint { font-size: 12px; color: var(--text3); text-align: center; margin-top: 6px; }
+.bal-hint b { color: var(--text2); }
 
-  .balance-hint {
-    font-size: 13px;
-    color: var(--text3);
-    text-align: center;
-    margin-top: 6px;
-  }
-  .balance-hint span { color: var(--text2); font-weight: 600; }
+.konvert-preview {
+  background: var(--teal-light);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.konvert-result { font-size: 24px; font-weight: 800; color: var(--teal-dark); }
+.konvert-sub    { font-size: 12px; color: var(--text2); margin-top: 4px; }
 
-  .toast {
-    position: fixed;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    opacity: 0;
-    transition: all 0.3s;
-    z-index: 300;
-    white-space: nowrap;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.success { border-color: var(--green); color: var(--green); }
-  .toast.error   { border-color: var(--red);   color: var(--red); }
+.submit-btn {
+  width: 100%;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: opacity 0.2s;
+}
+.submit-btn:active { opacity: 0.85; }
+.submit-btn.red { background: var(--red); }
+.submit-btn.orange { background: #FF9800; }
 
-  .empty-history {
-    text-align: center;
-    color: var(--text3);
-    font-size: 14px;
-    padding: 24px 0;
-  }
-
-  /* Rate modal */
-  .rate-display {
-    background: var(--bg3);
-    border-radius: var(--radius-sm);
-    padding: 16px;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-  .rate-display .rate-val { font-size: 28px; font-weight: 700; color: var(--yellow); }
-  .rate-display .rate-lbl { font-size: 12px; color: var(--text3); margin-top: 4px; }
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 90px; left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--text); color: #fff;
+  border-radius: 24px; padding: 10px 20px;
+  font-size: 13px; font-weight: 500;
+  opacity: 0; transition: all 0.3s;
+  z-index: 400; white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok  { background: var(--green); }
+.toast.err { background: var(--red); }
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
-<div class="topbar">
-  <div class="topbar-title">💼 Hamyon</div>
-  <div class="topbar-rate" onclick="openModal('rate-modal')">
-    1$ = <span id="rate-display">12,700</span> so'm
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-title">💼 Hamyon</div>
+      <div class="header-sub">Shaxsiy hamyon</div>
+    </div>
+    <div class="header-icon" onclick="showPage('tarix')">📋</div>
   </div>
 </div>
 
-<!-- TOTAL -->
-<div class="total-section">
-  <div class="total-label">Umumiy balans</div>
-  <div class="total-amount" id="total-balance">0 so'm</div>
-  <div class="total-sub" id="total-sub">Hisoblash...</div>
+<!-- BALANCE CARD -->
+<div class="balance-card">
+  <div class="balance-label">Umumiy balans</div>
+  <div class="balance-total" id="total-bal">0 so'm</div>
+  <div class="balance-divider"></div>
+  <div class="balance-row">
+    <div class="bal-left"><div class="bal-dot som"></div><div class="bal-name">Naqd So'm</div></div>
+    <div class="bal-amount" id="b-som">0 so'm</div>
+  </div>
+  <div class="balance-row">
+    <div class="bal-left"><div class="bal-dot usd"></div><div class="bal-name">Naqd Dollar</div></div>
+    <div class="bal-amount" id="b-usd">$0.00</div>
+  </div>
+  <div class="balance-row">
+    <div class="bal-left"><div class="bal-dot card"></div><div class="bal-name">Karta</div></div>
+    <div class="bal-amount" id="b-card">0 so'm</div>
+  </div>
 </div>
 
-<!-- ACTION BUTTONS -->
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">📈 Oylik kirim</div>
+    <div class="stat-amount green" id="stat-kirim">0 so'm</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">📉 Oylik chiqim</div>
+    <div class="stat-amount red" id="stat-chiqim">0 so'm</div>
+  </div>
+</div>
+
+<!-- ACTIONS -->
 <div class="actions">
-  <div class="action-btn kirim" onclick="openModal('kirim-modal')">
-    <div class="action-icon">+</div>
-    <span>Kirim</span>
-  </div>
-  <div class="action-btn chiqim" onclick="openModal('chiqim-modal')">
-    <div class="action-icon">−</div>
-    <span>Chiqim</span>
-  </div>
-  <div class="action-btn konvert" onclick="openModal('konvert-modal')">
-    <div class="action-icon">⇄</div>
-    <span>Konvert</span>
-  </div>
-  <div class="action-btn otkazma" onclick="openModal('otkazma-modal')">
-    <div class="action-icon">→</div>
-    <span>O'tkazma</span>
-  </div>
-</div>
-
-<!-- ACCOUNTS -->
-<div class="section-title">Hisoblar</div>
-<div class="accounts">
-  <div class="account-card som" onclick="openModal('kirim-modal')">
-    <div class="acc-icon">💵</div>
-    <div class="acc-info">
-      <div class="acc-name">Naqd So'm</div>
-      <div class="acc-sub">Naqd pul</div>
-    </div>
-    <div class="acc-balance">
-      <div class="acc-amount som" id="bal-som">0 so'm</div>
-    </div>
-  </div>
-  <div class="account-card usd" onclick="openModal('kirim-modal')">
-    <div class="acc-icon">💲</div>
-    <div class="acc-info">
-      <div class="acc-name">Naqd Dollar</div>
-      <div class="acc-sub">USD</div>
-    </div>
-    <div class="acc-balance">
-      <div class="acc-amount usd" id="bal-usd">$0.00</div>
-      <div class="acc-equivalent" id="bal-usd-eq">≈ 0 so'm</div>
-    </div>
-  </div>
-  <div class="account-card card" onclick="openModal('kirim-modal')">
-    <div class="acc-icon">💳</div>
-    <div class="acc-info">
-      <div class="acc-name">Karta</div>
-      <div class="acc-sub">Bank kartasi</div>
-    </div>
-    <div class="acc-balance">
-      <div class="acc-amount card" id="bal-card">0 so'm</div>
-    </div>
-  </div>
+  <button class="action-btn" onclick="openModal('chiqim-modal')">
+    <div class="action-ico chiqim">➖</div>
+    <div class="action-label">Chiqim</div>
+  </button>
+  <button class="action-btn" onclick="openModal('konvert-modal')">
+    <div class="action-ico konvert">⇄</div>
+    <div class="action-label">Konvert</div>
+  </button>
+  <button class="action-btn" onclick="openModal('otkazma-modal')">
+    <div class="action-ico otkazma">→</div>
+    <div class="action-label">O'tkazma</div>
+  </button>
 </div>
 
 <!-- HISTORY -->
-<div class="section-title">So'nggi amallar</div>
+<div class="section-title">So'nggi amallar <span onclick="showPage('tarix')">Barchasi →</span></div>
 <div class="history" id="history-list">
-  <div class="empty-history">Hali amaliyot yo'q</div>
+  <div class="empty-msg">Hali amaliyot yo'q</div>
 </div>
 
-<!-- ========== MODALS ========== -->
+<!-- ===== MODALS ===== -->
 
-<!-- KIRIM MODAL -->
-<div class="modal-overlay" id="kirim-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">➕ Kirim qo'shish</div>
-    <div class="form-label">Hisob tanlang</div>
-    <div class="acc-select-grid">
-      <div class="acc-select-item active" data-acc="som" onclick="selectAcc(this,'kirim')">
-        <div class="emoji">💵</div>
-        <div class="label">So'm</div>
-      </div>
-      <div class="acc-select-item" data-acc="usd" onclick="selectAcc(this,'kirim')">
-        <div class="emoji">💲</div>
-        <div class="label">Dollar</div>
-      </div>
-      <div class="acc-select-item" data-acc="card" onclick="selectAcc(this,'kirim')">
-        <div class="emoji">💳</div>
-        <div class="label">Karta</div>
-      </div>
+<!-- CHIQIM -->
+<div class="overlay" id="chiqim-modal">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">➖ Chiqim</div>
+    <div class="f-label">Hisob</div>
+    <div class="acc-grid">
+      <div class="acc-item active" data-acc="som" onclick="selAcc(this,'chiqim')"><div class="e">💵</div><div class="l">So'm</div></div>
+      <div class="acc-item" data-acc="usd" onclick="selAcc(this,'chiqim')"><div class="e">💲</div><div class="l">Dollar</div></div>
+      <div class="acc-item" data-acc="card" onclick="selAcc(this,'chiqim')"><div class="e">💳</div><div class="l">Karta</div></div>
     </div>
-    <div class="form-group">
-      <div class="form-label">Miqdor</div>
-      <input type="number" id="kirim-amount" placeholder="0" inputmode="decimal">
-      <div class="balance-hint">Joriy balans: <span id="kirim-bal-hint">0 so'm</span></div>
+    <div class="f-group">
+      <div class="f-label">Miqdor</div>
+      <input type="number" id="chiqim-amt" placeholder="0" inputmode="decimal">
+      <div class="bal-hint">Mavjud: <b id="chiqim-hint">0 so'm</b></div>
     </div>
-    <div class="form-group">
-      <div class="form-label">Izoh (ixtiyoriy)</div>
-      <input type="text" class="comment-input" id="kirim-comment" placeholder="Masalan: Ish haqi">
-    </div>
-    <button class="submit-btn" onclick="doKirim()">✓ Kirim qo'shish</button>
+    <button class="submit-btn red" onclick="doChiqim()">✓ Chiqim qo'shish</button>
   </div>
 </div>
 
-<!-- CHIQIM MODAL -->
-<div class="modal-overlay" id="chiqim-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">➖ Chiqim qo'shish</div>
-    <div class="form-label">Hisob tanlang</div>
-    <div class="acc-select-grid">
-      <div class="acc-select-item active" data-acc="som" onclick="selectAcc(this,'chiqim')">
-        <div class="emoji">💵</div>
-        <div class="label">So'm</div>
-      </div>
-      <div class="acc-select-item" data-acc="usd" onclick="selectAcc(this,'chiqim')">
-        <div class="emoji">💲</div>
-        <div class="label">Dollar</div>
-      </div>
-      <div class="acc-select-item" data-acc="card" onclick="selectAcc(this,'chiqim')">
-        <div class="emoji">💳</div>
-        <div class="label">Karta</div>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="form-label">Miqdor</div>
-      <input type="number" id="chiqim-amount" placeholder="0" inputmode="decimal">
-      <div class="balance-hint">Mavjud: <span id="chiqim-bal-hint">0 so'm</span></div>
-    </div>
-    <div class="form-group">
-      <div class="form-label">Izoh (ixtiyoriy)</div>
-      <input type="text" class="comment-input" id="chiqim-comment" placeholder="Masalan: Oziq-ovqat">
-    </div>
-    <button class="submit-btn danger" onclick="doChiqim()">✓ Chiqim qo'shish</button>
-  </div>
-</div>
-
-<!-- KONVERT MODAL -->
-<div class="modal-overlay" id="konvert-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">💱 Konvertatsiya</div>
-    <div class="form-label">Yo'nalish</div>
+<!-- KONVERT -->
+<div class="overlay" id="konvert-modal">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">💱 Konvertatsiya</div>
+    <div class="f-label">Yo'nalish</div>
     <div class="dir-grid">
-      <div class="dir-item active" id="dir-s2u" onclick="setDir('som_to_usd')">💵 So'm → 💲 $</div>
-      <div class="dir-item" id="dir-u2s" onclick="setDir('usd_to_som')">💲 $ → 💵 So'm</div>
+      <div class="dir-item active" id="d-s2u" onclick="setDir('s2u')">💵 So'm → 💲$</div>
+      <div class="dir-item" id="d-u2s" onclick="setDir('u2s')">💲$ → 💵 So'm</div>
     </div>
-    <div class="form-group">
-      <div class="form-label" id="konvert-label">Miqdor (so'm)</div>
-      <input type="number" id="konvert-amount" placeholder="0" inputmode="decimal" oninput="calcConvert()">
-      <div class="balance-hint">Mavjud: <span id="konvert-bal-hint">0 so'm</span></div>
+    <div class="f-group">
+      <div class="f-label" id="k-label">Miqdor (so'm)</div>
+      <input type="number" id="konvert-amt" placeholder="0" inputmode="decimal" oninput="calcK()">
+      <div class="bal-hint">Mavjud: <b id="konvert-hint">0 so'm</b></div>
     </div>
-    <div class="rate-display">
-      <div class="rate-val" id="konvert-result">≈ $0.00</div>
-      <div class="rate-lbl">Kurs: 1$ = <span id="konvert-rate-show">12,700</span> so'm</div>
+    <div class="f-group">
+      <div class="f-label">Kurs (1$ = ? so'm)</div>
+      <input type="number" id="konvert-rate" placeholder="12700" inputmode="decimal" oninput="calcK()">
     </div>
-    <button class="submit-btn blue" onclick="doKonvert()">✓ Konvert qilish</button>
+    <div class="konvert-preview">
+      <div class="konvert-result" id="k-result">≈ $0.00</div>
+      <div class="konvert-sub">Taxminiy natija</div>
+    </div>
+    <button class="submit-btn" onclick="doKonvert()">✓ Konvert qilish</button>
   </div>
 </div>
 
-<!-- OTKAZMA MODAL -->
-<div class="modal-overlay" id="otkazma-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🔄 O'tkazma</div>
-    <div class="form-label">Qayerdan</div>
-    <div class="acc-select-grid" id="otkazma-from-grid">
-      <div class="acc-select-item active" data-acc="som" onclick="selectOtkazmaFrom(this)">
-        <div class="emoji">💵</div><div class="label">So'm</div>
-      </div>
-      <div class="acc-select-item" data-acc="usd" onclick="selectOtkazmaFrom(this)">
-        <div class="emoji">💲</div><div class="label">Dollar</div>
-      </div>
-      <div class="acc-select-item" data-acc="card" onclick="selectOtkazmaFrom(this)">
-        <div class="emoji">💳</div><div class="label">Karta</div>
-      </div>
+<!-- OTKAZMA -->
+<div class="overlay" id="otkazma-modal">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">🔄 O'tkazma</div>
+    <div class="f-label">Qayerdan</div>
+    <div class="acc-grid" id="ot-from">
+      <div class="acc-item active" data-acc="som" onclick="selOtFrom(this)"><div class="e">💵</div><div class="l">So'm</div></div>
+      <div class="acc-item" data-acc="usd" onclick="selOtFrom(this)"><div class="e">💲</div><div class="l">Dollar</div></div>
+      <div class="acc-item" data-acc="card" onclick="selOtFrom(this)"><div class="e">💳</div><div class="l">Karta</div></div>
     </div>
-    <div class="form-label">Qayerga</div>
-    <div class="acc-select-grid" id="otkazma-to-grid">
-      <div class="acc-select-item" data-acc="som" onclick="selectOtkazmaTo(this)">
-        <div class="emoji">💵</div><div class="label">So'm</div>
-      </div>
-      <div class="acc-select-item active" data-acc="card" onclick="selectOtkazmaTo(this)">
-        <div class="emoji">💳</div><div class="label">Karta</div>
-      </div>
+    <div class="f-label">Qayerga</div>
+    <div class="acc-grid" id="ot-to">
+      <div class="acc-item" data-acc="som" onclick="selOtTo(this)"><div class="e">💵</div><div class="l">So'm</div></div>
+      <div class="acc-item active" data-acc="card" onclick="selOtTo(this)"><div class="e">💳</div><div class="l">Karta</div></div>
     </div>
-    <div class="form-group">
-      <div class="form-label">Miqdor</div>
-      <input type="number" id="otkazma-amount" placeholder="0" inputmode="decimal">
-      <div class="balance-hint">Mavjud: <span id="otkazma-bal-hint">0 so'm</span></div>
+    <div class="f-group">
+      <div class="f-label">Miqdor</div>
+      <input type="number" id="otkazma-amt" placeholder="0" inputmode="decimal">
+      <div class="bal-hint">Mavjud: <b id="otkazma-hint">0 so'm</b></div>
     </div>
-    <button class="submit-btn yellow" onclick="doOtkazma()">✓ O'tkazma</button>
+    <button class="submit-btn orange" onclick="doOtkazma()">✓ O'tkazma</button>
   </div>
 </div>
 
-<!-- RATE MODAL -->
-<div class="modal-overlay" id="rate-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">⚙️ Dollar kursi</div>
-    <div class="rate-display">
-      <div class="rate-val" id="cur-rate-display">12,700</div>
-      <div class="rate-lbl">Joriy kurs (so'm)</div>
-    </div>
-    <div class="form-group">
-      <div class="form-label">Yangi kurs</div>
-      <input type="number" id="new-rate-input" placeholder="12700" inputmode="decimal">
-    </div>
-    <button class="submit-btn yellow" onclick="doSetRate()">✓ Kursni yangilash</button>
-  </div>
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="showPage('asosiy')">
+    <div class="nav-ico">🏠</div>
+    <div class="nav-label">Asosiy</div>
+  </button>
+  <button class="nav-item" onclick="showPage('tarix')">
+    <div class="nav-ico">⇄</div>
+    <div class="nav-label">Tarix</div>
+  </button>
+  <button class="nav-item" onclick="showPage('asosiy')">
+    <div class="nav-ico">💼</div>
+    <div class="nav-label">Hamyon</div>
+  </button>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
 const tg = window.Telegram?.WebApp;
-if (tg) { tg.expand(); tg.setHeaderColor('#0A0E1A'); }
+if (tg) { tg.expand(); tg.setHeaderColor('#00BCD4'); }
 
 // ── STATE ──
-let state = {
-  som: 0, usd: 0, card: 0,
-  rate: 12700,
-  history: [],
-  kirimAcc: 'som',
-  chiqimAcc: 'som',
-  konvertDir: 'som_to_usd',
-  otkazmaFrom: 'som',
-  otkazmaTo: 'card'
-};
+let S = { som:0, usd:0, card:0, history:[], stats:{kirim:0,chiqim:0}, chiqimAcc:'som', konvertDir:'s2u', otFrom:'som', otTo:'card' };
 
-// ── STORAGE ──
-function save() {
-  try { localStorage.setItem('hamyon_v2', JSON.stringify(state)); } catch(e){}
-}
-function load() {
-  try {
-    const d = localStorage.getItem('hamyon_v2');
-    if (d) { const p = JSON.parse(d); Object.assign(state, p); }
-  } catch(e){}
-}
+function save() { try { localStorage.setItem('hamyon_v3', JSON.stringify(S)); } catch(e){} }
+function load() { try { const d=localStorage.getItem('hamyon_v3'); if(d) Object.assign(S,JSON.parse(d)); } catch(e){} }
 
 // ── FORMAT ──
-function fmtSom(n)  { return Math.round(n).toLocaleString('uz-UZ') + ' so\'m'; }
-function fmtUsd(n)  { return '$' + (+n).toFixed(2); }
-function fmtAmt(acc, n) {
-  if (acc === 'usd') return fmtUsd(n);
-  return fmtSom(n);
-}
-
-function getBalHint(acc) {
-  if (acc === 'usd') return fmtUsd(state.usd);
-  if (acc === 'som') return fmtSom(state.som);
-  return fmtSom(state.card);
+function fS(n) { return Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ') + ' so\'m'; }
+function fU(n) { return '$'+(+n).toFixed(2); }
+function fA(acc,n) { return acc==='usd'?fU(n):fS(n); }
+function bal(acc) { return S[acc]||0; }
+function now() {
+  const d=new Date();
+  return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
 }
 
 // ── RENDER ──
 function render() {
-  const total = state.som + state.usd * state.rate + state.card;
-  document.getElementById('total-balance').textContent = fmtSom(total);
-  document.getElementById('total-sub').textContent =
-    'So\'m + $' + state.usd.toFixed(2) + ' + Karta';
-  document.getElementById('bal-som').textContent  = fmtSom(state.som);
-  document.getElementById('bal-usd').textContent  = fmtUsd(state.usd);
-  document.getElementById('bal-usd-eq').textContent = '≈ ' + fmtSom(state.usd * state.rate);
-  document.getElementById('bal-card').textContent = fmtSom(state.card);
-  document.getElementById('rate-display').textContent = Math.round(state.rate).toLocaleString();
-  document.getElementById('cur-rate-display').textContent = Math.round(state.rate).toLocaleString();
-  document.getElementById('konvert-rate-show').textContent = Math.round(state.rate).toLocaleString();
+  const total = S.som + S.usd * 12700 + S.card;
+  document.getElementById('total-bal').textContent = fS(total);
+  document.getElementById('b-som').textContent  = fS(S.som);
+  document.getElementById('b-usd').textContent  = fU(S.usd);
+  document.getElementById('b-card').textContent = fS(S.card);
+  document.getElementById('stat-kirim').textContent  = fS(S.stats.kirim||0);
+  document.getElementById('stat-chiqim').textContent = fS(S.stats.chiqim||0);
   renderHistory();
 }
 
 function renderHistory() {
   const el = document.getElementById('history-list');
-  if (!state.history.length) {
-    el.innerHTML = '<div class="empty-history">Hali amaliyot yo\'q</div>';
-    return;
-  }
-  const icons = { kirim:'➕', chiqim:'➖', konvert:'💱', otkazma:'🔄' };
-  const last = state.history.slice(-10).reverse();
-  el.innerHTML = last.map(h => {
-    let amtStr = '', amtClass = 'swap';
-    if (h.type === 'kirim')   { amtStr = '+' + fmtAmt(h.acc, h.amount); amtClass = 'plus'; }
-    if (h.type === 'chiqim')  { amtStr = '−' + fmtAmt(h.acc, h.amount); amtClass = 'minus'; }
-    if (h.type === 'konvert') { amtStr = fmtAmt(h.accFrom, h.amount) + ' ⇄ ' + fmtAmt(h.accTo, h.amountTo); }
-    if (h.type === 'otkazma') { amtStr = fmtAmt(h.accFrom, h.amount); }
-    const accNames = { som:'Naqd So\'m', usd:'Dollar', card:'Karta' };
-    const typeNames = { kirim:'Kirim', chiqim:'Chiqim', konvert:'Konvert', otkazma:'O\'tkazma' };
-    const title = h.comment || (h.type === 'konvert'
-      ? accNames[h.accFrom] + ' → ' + accNames[h.accTo]
-      : h.type === 'otkazma'
-        ? accNames[h.accFrom] + ' → ' + accNames[h.accTo]
-        : typeNames[h.type] + (h.acc ? ' (' + accNames[h.acc] + ')' : ''));
-    return `<div class="history-item">
-      <div class="h-icon ${h.type}">${icons[h.type]}</div>
-      <div class="h-info">
-        <div class="h-title">${title}</div>
-        <div class="h-date">${h.date}</div>
-      </div>
-      <div class="h-amount ${amtClass}">${amtStr}</div>
-    </div>`;
-  }).join('');
-}
+  if (!S.history.length) { el.innerHTML = '<div class="empty-msg">Hali amaliyot yo\'q</div>'; return; }
+  const icons = {kirim:'➕',chiqim:'➖',konvert:'💱',otkazma:'🔄'};
+  const accN = {som:"So'm", usd:'Dollar', card:'Karta'};
+  const typeN = {kirim:'Kirim', chiqim:'Chiqim', konvert:'Konvert', otkazma:"O'tkazma"};
 
-function now() {
-  const d = new Date();
-  return d.toLocaleDateString('uz-UZ', {day:'2-digit',month:'2-digit'}) + ' ' +
-         d.toLocaleTimeString('uz-UZ', {hour:'2-digit',minute:'2-digit'});
+  // Sanalar bo'yicha guruh
+  const groups = {};
+  S.history.slice().reverse().slice(0,15).forEach(h => {
+    const d = h.date.split(' ')[0];
+    if (!groups[d]) groups[d] = {items:[],plus:0,minus:0};
+    groups[d].items.push(h);
+    if (h.type==='kirim' && !h.rasxod) groups[d].plus += h.amount*(h.acc==='usd'?12700:1);
+    if (h.type==='chiqim') groups[d].minus += h.amount*(h.acc==='usd'?12700:1);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([date, g]) => {
+    const net = g.plus - g.minus;
+    html += `<div class="day-group">
+      <div class="day-label">
+        <span>${date}</span>
+        <span class="day-total ${net>=0?'plus':'minus'}">${net>=0?'+':''}${fS(Math.abs(net))}</span>
+      </div>`;
+    g.items.forEach(h => {
+      let amt='', cls='swap', title='', sub='';
+      if(h.type==='kirim') { amt='+'+fA(h.acc,h.amount); cls='plus'; title=h.sender||typeN.kirim; sub=accN[h.acc]+(h.rasxod?' • Rasxod':''); }
+      else if(h.type==='chiqim') { amt='-'+fA(h.acc,h.amount); cls='minus'; title=h.comment||typeN.chiqim; sub=accN[h.acc]; }
+      else if(h.type==='konvert') { amt=fA(h.accFrom,h.amount)+'→'+fA(h.accTo,h.amountTo); cls='swap'; title='Konvert'; sub=accN[h.accFrom]+' → '+accN[h.accTo]; }
+      else { amt=fA(h.accFrom,h.amount); cls='swap'; title="O'tkazma"; sub=accN[h.accFrom]+' → '+accN[h.accTo]; }
+      html += `<div class="h-item">
+        <div class="h-ico ${h.type}">${icons[h.type]}</div>
+        <div class="h-info"><div class="h-title">${title}</div><div class="h-sub">${sub}</div></div>
+        <div class="h-right"><div class="h-amount ${cls}">${amt}</div><div class="h-time">${h.date.split(' ')[1]||''}</div></div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  el.innerHTML = html;
 }
 
 // ── MODAL ──
 function openModal(id) {
   document.getElementById(id).classList.add('open');
-  // update hints
-  if (id === 'kirim-modal')   updateKirimHint();
-  if (id === 'chiqim-modal')  updateChiqimHint();
-  if (id === 'konvert-modal') { updateKonvertHint(); calcConvert(); }
-  if (id === 'otkazma-modal') updateOtkazmaHint();
+  if(id==='chiqim-modal') updChiqimHint();
+  if(id==='konvert-modal') { updKonvertHint(); calcK(); }
+  if(id==='otkazma-modal') updOtHint();
 }
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-document.querySelectorAll('.modal-overlay').forEach(el => {
-  el.addEventListener('click', e => {
-    if (e.target === el) el.classList.remove('open');
-  });
+document.querySelectorAll('.overlay').forEach(el => {
+  el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); });
 });
+function closeAll() { document.querySelectorAll('.overlay').forEach(el=>el.classList.remove('open')); }
 
-// ── SELECT ACC ──
-function selectAcc(el, modal) {
-  el.closest('.acc-select-grid').querySelectorAll('.acc-select-item').forEach(i => i.classList.remove('active'));
+// ── SELECT ──
+function selAcc(el,modal) {
+  el.closest('.acc-grid').querySelectorAll('.acc-item').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');
-  state[modal + 'Acc'] = el.dataset.acc;
-  if (modal === 'kirim')  updateKirimHint();
-  if (modal === 'chiqim') updateChiqimHint();
+  if(modal==='chiqim') { S.chiqimAcc=el.dataset.acc; updChiqimHint(); }
 }
-function updateKirimHint()  {
-  document.getElementById('kirim-bal-hint').textContent = getBalHint(state.kirimAcc);
+function updChiqimHint() { document.getElementById('chiqim-hint').textContent=fA(S.chiqimAcc,bal(S.chiqimAcc)); }
+function updKonvertHint() {
+  const acc=S.konvertDir==='s2u'?'som':'usd';
+  document.getElementById('konvert-hint').textContent=fA(acc,bal(acc));
 }
-function updateChiqimHint() {
-  document.getElementById('chiqim-bal-hint').textContent = getBalHint(state.chiqimAcc);
+function updOtHint() { document.getElementById('otkazma-hint').textContent=fA(S.otFrom,bal(S.otFrom)); }
+
+function selOtFrom(el) {
+  el.closest('.acc-grid').querySelectorAll('.acc-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active'); S.otFrom=el.dataset.acc; updOtHint();
+}
+function selOtTo(el) {
+  el.closest('.acc-grid').querySelectorAll('.acc-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active'); S.otTo=el.dataset.acc;
 }
 
-// ── KIRIM ──
-function doKirim() {
-  const amt = parseFloat(document.getElementById('kirim-amount').value);
-  if (!amt || amt <= 0) { showToast('Miqdor kiriting!', 'error'); return; }
-  const comment = document.getElementById('kirim-comment').value.trim();
-  state[state.kirimAcc] += amt;
-  state.history.push({ type:'kirim', acc: state.kirimAcc, amount: amt, comment, date: now() });
-  save(); render();
-  document.getElementById('kirim-amount').value = '';
-  document.getElementById('kirim-comment').value = '';
-  closeModal('kirim-modal');
-  showToast('+' + fmtAmt(state.kirimAcc, amt) + ' kirim!', 'success');
+function setDir(d) {
+  S.konvertDir=d;
+  document.getElementById('d-s2u').classList.toggle('active',d==='s2u');
+  document.getElementById('d-u2s').classList.toggle('active',d==='u2s');
+  document.getElementById('k-label').textContent=d==='s2u'?"Miqdor (so'm)":"Miqdor (dollar $)";
+  document.getElementById('konvert-amt').value='';
+  document.getElementById('k-result').textContent=d==='s2u'?'≈ $0.00':'≈ 0 so\'m';
+  updKonvertHint();
+}
+
+function calcK() {
+  const amt=parseFloat(document.getElementById('konvert-amt').value)||0;
+  const rate=parseFloat(document.getElementById('konvert-rate').value)||12700;
+  if(S.konvertDir==='s2u') document.getElementById('k-result').textContent='≈ $'+(amt/rate).toFixed(2);
+  else document.getElementById('k-result').textContent='≈ '+fS(amt*rate);
 }
 
 // ── CHIQIM ──
 function doChiqim() {
-  const amt = parseFloat(document.getElementById('chiqim-amount').value);
-  if (!amt || amt <= 0) { showToast('Miqdor kiriting!', 'error'); return; }
-  const bal = state[state.chiqimAcc];
-  if (amt > bal) { showToast('Mablag\' yetarli emas!', 'error'); return; }
-  const comment = document.getElementById('chiqim-comment').value.trim();
-  state[state.chiqimAcc] -= amt;
-  state.history.push({ type:'chiqim', acc: state.chiqimAcc, amount: amt, comment, date: now() });
-  save(); render();
-  document.getElementById('chiqim-amount').value = '';
-  document.getElementById('chiqim-comment').value = '';
-  closeModal('chiqim-modal');
-  showToast('−' + fmtAmt(state.chiqimAcc, amt) + ' chiqim!', 'error');
+  const amt=parseFloat(document.getElementById('chiqim-amt').value);
+  if(!amt||amt<=0){toast('Miqdor kiriting!','err');return;}
+  if(bal(S.chiqimAcc)<amt){toast("Mablag' yetarli emas!",'err');return;}
+  S[S.chiqimAcc]-=amt;
+  S.stats.chiqim=(S.stats.chiqim||0)+amt*(S.chiqimAcc==='usd'?12700:1);
+  S.history.push({type:'chiqim',acc:S.chiqimAcc,amount:amt,comment:'qo\'lda',date:now()});
+  save();render();
+  document.getElementById('chiqim-amt').value='';
+  closeAll();toast('-'+fA(S.chiqimAcc,amt),'err');
 }
 
 // ── KONVERT ──
-function setDir(d) {
-  state.konvertDir = d;
-  document.getElementById('dir-s2u').classList.toggle('active', d === 'som_to_usd');
-  document.getElementById('dir-u2s').classList.toggle('active', d === 'usd_to_som');
-  document.getElementById('konvert-label').textContent = d === 'som_to_usd' ? 'Miqdor (so\'m)' : 'Miqdor (dollar $)';
-  document.getElementById('konvert-amount').value = '';
-  document.getElementById('konvert-result').textContent = d === 'som_to_usd' ? '≈ $0.00' : '≈ 0 so\'m';
-  updateKonvertHint();
-}
-function updateKonvertHint() {
-  const acc = state.konvertDir === 'som_to_usd' ? 'som' : 'usd';
-  document.getElementById('konvert-bal-hint').textContent = getBalHint(acc);
-}
-function calcConvert() {
-  const amt = parseFloat(document.getElementById('konvert-amount').value) || 0;
-  const r = state.rate;
-  if (state.konvertDir === 'som_to_usd') {
-    document.getElementById('konvert-result').textContent = '≈ $' + (amt / r).toFixed(2);
-  } else {
-    document.getElementById('konvert-result').textContent = '≈ ' + fmtSom(amt * r);
-  }
-}
 function doKonvert() {
-  const amt = parseFloat(document.getElementById('konvert-amount').value);
-  if (!amt || amt <= 0) { showToast('Miqdor kiriting!', 'error'); return; }
-  const r = state.rate;
-  if (state.konvertDir === 'som_to_usd') {
-    if (state.som < amt) { showToast('So\'m yetarli emas!', 'error'); return; }
-    const res = +(amt / r).toFixed(2);
-    state.som -= amt; state.usd += res;
-    state.history.push({ type:'konvert', accFrom:'som', accTo:'usd', amount:amt, amountTo:res, date:now() });
-    showToast(fmtSom(amt) + ' → $' + res, 'success');
+  const amt=parseFloat(document.getElementById('konvert-amt').value);
+  const rate=parseFloat(document.getElementById('konvert-rate').value);
+  if(!amt||amt<=0){toast('Miqdor kiriting!','err');return;}
+  if(!rate||rate<=0){toast('Kurs kiriting!','err');return;}
+  if(S.konvertDir==='s2u'){
+    if(S.som<amt){toast("Mablag' yetarli emas!",'err');return;}
+    const res=+(amt/rate).toFixed(2);
+    S.som-=amt; S.usd+=res;
+    S.history.push({type:'konvert',accFrom:'som',accTo:'usd',amount:amt,amountTo:res,date:now()});
+    toast(fS(amt)+' → $'+res,'ok');
   } else {
-    if (state.usd < amt) { showToast('Dollar yetarli emas!', 'error'); return; }
-    const res = Math.round(amt * r);
-    state.usd -= amt; state.som += res;
-    state.history.push({ type:'konvert', accFrom:'usd', accTo:'som', amount:amt, amountTo:res, date:now() });
-    showToast('$' + amt + ' → ' + fmtSom(res), 'success');
+    if(S.usd<amt){toast("Mablag' yetarli emas!",'err');return;}
+    const res=Math.round(amt*rate);
+    S.usd-=amt; S.som+=res;
+    S.history.push({type:'konvert',accFrom:'usd',accTo:'som',amount:amt,amountTo:res,date:now()});
+    toast('$'+amt+' → '+fS(res),'ok');
   }
-  save(); render();
-  document.getElementById('konvert-amount').value = '';
-  closeModal('konvert-modal');
+  save();render();
+  document.getElementById('konvert-amt').value='';
+  closeAll();
 }
 
 // ── OTKAZMA ──
-function selectOtkazmaFrom(el) {
-  el.closest('.acc-select-grid').querySelectorAll('.acc-select-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  state.otkazmaFrom = el.dataset.acc;
-  updateOtkazmaHint();
-}
-function selectOtkazmaTo(el) {
-  el.closest('.acc-select-grid').querySelectorAll('.acc-select-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  state.otkazmaTo = el.dataset.acc;
-}
-function updateOtkazmaHint() {
-  document.getElementById('otkazma-bal-hint').textContent = getBalHint(state.otkazmaFrom);
-}
 function doOtkazma() {
-  const amt = parseFloat(document.getElementById('otkazma-amount').value);
-  if (!amt || amt <= 0) { showToast('Miqdor kiriting!', 'error'); return; }
-  if (state.otkazmaFrom === state.otkazmaTo) { showToast('Turli hisoblarni tanlang!', 'error'); return; }
-  if (state[state.otkazmaFrom] < amt) { showToast('Mablag\' yetarli emas!', 'error'); return; }
-  state[state.otkazmaFrom] -= amt;
-  state[state.otkazmaTo] += amt;
-  state.history.push({ type:'otkazma', accFrom: state.otkazmaFrom, accTo: state.otkazmaTo, amount: amt, date: now() });
-  save(); render();
-  document.getElementById('otkazma-amount').value = '';
-  closeModal('otkazma-modal');
-  const names = { som:"So'm", usd:'Dollar', card:'Karta' };
-  showToast(names[state.otkazmaFrom] + ' → ' + names[state.otkazmaTo], 'success');
-}
-
-// ── RATE ──
-function doSetRate() {
-  const r = parseFloat(document.getElementById('new-rate-input').value);
-  if (!r || r <= 0) { showToast('Kurs kiriting!', 'error'); return; }
-  state.rate = r;
-  save(); render();
-  document.getElementById('new-rate-input').value = '';
-  closeModal('rate-modal');
-  showToast('Kurs: 1$ = ' + fmtSom(r), 'success');
+  const amt=parseFloat(document.getElementById('otkazma-amt').value);
+  if(!amt||amt<=0){toast('Miqdor kiriting!','err');return;}
+  if(S.otFrom===S.otTo){toast("Turli hisoblarni tanlang!",'err');return;}
+  if(bal(S.otFrom)<amt){toast("Mablag' yetarli emas!",'err');return;}
+  S[S.otFrom]-=amt; S[S.otTo]+=amt;
+  S.history.push({type:'otkazma',accFrom:S.otFrom,accTo:S.otTo,amount:amt,date:now()});
+  save();render();
+  document.getElementById('otkazma-amt').value='';
+  closeAll();
+  const n={som:"So'm",usd:'Dollar',card:'Karta'};
+  toast(n[S.otFrom]+' → '+n[S.otTo],'ok');
 }
 
 // ── TOAST ──
-let toastTimer;
-function showToast(msg, type='success') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show ' + type;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+let tt;
+function toast(msg,type='ok'){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast show '+type;
+  clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('show'),2500);
 }
 
-// ── INIT ──
-load();
-render();
+// ── PAGE ──
+function showPage(p) {
+  if(p==='tarix') toast('Tarix — yuqoridagi ro\'yxatda ko\'ring','ok');
+}
+
+load(); render();
 </script>
 </body>
 </html>
