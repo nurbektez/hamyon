@@ -313,47 +313,60 @@ function fU(n){ return '$ ' + Math.round(n).toLocaleString('ru-RU').replace(/,/g
 function fA(acc,n){ return acc==='usd'?fU(n):fS(n); }
 
 // ── BOT BILAN ALOQA ──
+// Ma'lumot URL hash yoki tg.initDataUnsafe orqali keladi
+const TG_USER = tg?.initDataUnsafe?.user;
+const MY_UID = TG_USER?.id || null;
+
+// Botga amallar uchun sendData
 function sendToBot(data){
   if(tg?.sendData){ tg.sendData(JSON.stringify(data)); }
-  else { console.log('Bot data:', data); }
 }
 
-// Botdan ma'lumot olish (bot __DATA__:... xabar yuboradi)
-// Mini App ochilganda darhol so'rov yuboradi
+// Ma'lumotni URL dan yoki localStorage dan olish
 function requestData(){
-  sendToBot({ action: 'get_data' });
-}
-
-// Botdan kelgan xabarni qayta ishlash
-window.addEventListener('message', function(e){
+  // 1. URL hash dan tekshir: ?d=... yoki #d=...
   try{
-    const txt = typeof e.data === 'string' ? e.data : JSON.stringify(e.data);
-    if(txt.includes('__DATA__:')){
-      const json_str = txt.split('__DATA__:')[1];
-      const data = JSON.parse(json_str);
+    const params = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.replace('#',''));
+    const raw = params.get('d') || hashParams.get('d');
+    if(raw){
+      const data = JSON.parse(decodeURIComponent(raw));
+      applyData(data); return;
+    }
+  }catch(e){}
+  
+  // 2. localStorage dan oldingi ma'lumot
+  try{
+    const cached = localStorage.getItem('tezfast_data');
+    if(cached){
+      const data = JSON.parse(cached);
       applyData(data);
+      return;
     }
-  }catch(err){}
-});
-
-// Telegram WebApp event
-if(tg){
-  tg.onEvent('message', function(msg){
-    if(msg && msg.text && msg.text.includes('__DATA__:')){
-      try{
-        const json_str = msg.text.split('__DATA__:')[1];
-        applyData(JSON.parse(json_str));
-      }catch(e){}
-    }
-  });
+  }catch(e){}
+  
+  // 3. Demo rejim
+  showDemo();
 }
 
 function applyData(data){
-  if(data.error){ toast('Ruxsat yo\'q', 'err'); return; }
+  if(!data || data.error){ showDemo(); return; }
   Object.assign(D, data);
+  // Saqlash
+  try{ localStorage.setItem('tezfast_data', JSON.stringify(data)); }catch(e){}
   document.getElementById('loader').style.display = 'none';
-  setupUI();
-  renderAll();
+  setupUI(); renderAll();
+}
+
+function showDemo(){
+  document.getElementById('loader').style.display = 'none';
+  if(!D.role){
+    D.role='admin'; D.fullName='Admin'; D.som=0; D.usd=0; D.karta=0;
+    D.stats={kirim_som:0,kirim_usd:0,kirim_karta:0,chiqim_som:0,chiqim_usd:0,chiqim_karta:0};
+    D.points=[]; D.users=[{id:6398350499,name:'Admin',role:'admin',point:'',active:1}];
+    toast('Yangilash uchun /start yuboring','info');
+  }
+  setupUI(); showPage(D.role==='point_worker'?'worker':'gazna');
 }
 
 // ── SETUP ──
@@ -621,23 +634,7 @@ function toast(msg,type='ok'){
 function nw(){ const d=new Date(); return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}); }
 
 // ── INIT ──
-// Mini App ochilganda botdan ma'lumot so'raydi
-setTimeout(()=>{ requestData(); },300);
-
-// Agar 5 soniyada javob kelmasa — demo rejim
-setTimeout(()=>{
-  if(D.role===null){
-    document.getElementById('loader').style.display='none';
-    D.role='admin'; D.fullName='Admin'; D.som=0; D.usd=0; D.karta=0;
-    D.points=[
-      {code:'TT-100',name:'Beruniy',active:1},{code:'TT-101',name:'Yunusobod',active:1},
-      {code:'AA-200',name:'Yangi shahar',active:1},{code:'BB-300',name:'Buxoro',active:1},
-    ];
-    D.users=[{id:6398350499,name:'Admin',role:'admin',point:'',active:1}];
-    setupUI(); showPage('gazna');
-    toast('Demo rejim (bot ulanmagan)','info');
-  }
-},5000);
+requestData();
 </script>
 </body>
 </html>
