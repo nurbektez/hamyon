@@ -10,26 +10,24 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
   --teal:#00C9B1;--teal2:#00A896;--teal3:#E0FAF7;
-  --red:#FF4D6D;--red-bg:#FFF0F3;
-  --green:#00C853;--green-bg:#F0FFF4;
-  --yellow:#FFB800;--yellow-bg:#FFFBF0;
-  --blue:#3B7FFF;--blue-bg:#F0F5FF;
-  --bg:#F4F6FB;--white:#FFFFFF;
-  --text:#0D1B2A;--text2:#5A6A7E;--text3:#B0BEC5;
+  --red:#FF4D6D;--red-bg:#FFF0F3;--green:#00C853;--green-bg:#F0FFF4;
+  --yellow:#FFB800;--yellow-bg:#FFFBF0;--blue:#3B7FFF;--blue-bg:#F0F5FF;
+  --bg:#F4F6FB;--white:#FFFFFF;--text:#0D1B2A;--text2:#5A6A7E;--text3:#B0BEC5;
   --border:#E8EDF5;--shadow:0 4px 20px rgba(0,201,177,0.10);--shadow2:0 2px 8px rgba(0,0,0,0.05);
   --r:20px;--r2:14px;--r3:10px;
 }
 body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;padding-bottom:85px;overflow-x:hidden}
+/* HEADER */
 .hdr{background:linear-gradient(135deg,var(--teal) 0%,var(--teal2) 100%);padding:18px 20px 28px;position:relative;overflow:hidden}
 .hdr::before{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;background:rgba(255,255,255,0.08);border-radius:50%}
 .hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.hdr-logo{font-size:20px;font-weight:900;color:#fff;letter-spacing:-0.5px}
-.hdr-logo span{opacity:0.7;font-weight:600}
+.hdr-logo{font-size:20px;font-weight:900;color:#fff}
+.hdr-logo span{opacity:.7;font-weight:600}
 .hdr-badge{background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:12px;color:#fff;font-weight:700}
 .hdr-name{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600}
-/* BALANCE */
+/* BALANCE CARD */
 .bal-card{background:var(--white);border-radius:var(--r);margin:0 16px;margin-top:-14px;padding:18px;box-shadow:var(--shadow);position:relative;z-index:10}
-.bal-lbl{font-size:11px;color:var(--text2);font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.bal-lbl{font-size:11px;color:var(--text2);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .bal-total{font-size:26px;font-weight:900;color:var(--text);letter-spacing:-1px;margin-bottom:14px}
 .bal-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
 .bal-row:last-child{border-bottom:none;padding-bottom:0}
@@ -41,14 +39,15 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 /* STATS */
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px 0}
 .stat-c{background:var(--white);border-radius:var(--r2);padding:12px;box-shadow:var(--shadow2)}
-.stat-lbl{font-size:10px;color:var(--text2);font-weight:800;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px}
-.stat-val{font-size:14px;font-weight:900}.stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}
+.stat-lbl{font-size:10px;color:var(--text2);font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.stat-val{font-size:14px;font-weight:900}
+.stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}
 /* ACTIONS */
-.actions{display:grid;gap:10px;padding:14px 16px}
-.abtn{background:var(--white);border-radius:var(--r2);padding:13px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:var(--shadow2);border:none;cursor:pointer;transition:transform 0.15s;font-family:'Nunito',sans-serif}
-.abtn:active{transform:scale(0.93)}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 16px}
+.abtn{background:var(--white);border-radius:var(--r2);padding:13px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:var(--shadow2);border:none;cursor:pointer;transition:transform .15s;font-family:'Nunito',sans-serif}
+.abtn:active{transform:scale(.93)}
 .abtn-ico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px}
-.abtn-ico.red{background:var(--red-bg)}.abtn-ico.teal{background:var(--teal3)}.abtn-ico.yellow{background:var(--yellow-bg)}.abtn-ico.blue{background:var(--blue-bg)}.abtn-ico.green{background:var(--green-bg)}
+.abtn-ico.red{background:var(--red-bg)}.abtn-ico.teal{background:var(--teal3)}.abtn-ico.yellow{background:var(--yellow-bg)}.abtn-ico.blue{background:var(--blue-bg)}
 .abtn span{font-size:11px;color:var(--text2);font-weight:700}
 /* SECTION */
 .sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:4px 16px 10px}
@@ -62,23 +61,24 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .tx-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tx-sub{font-size:10px;color:var(--text3);margin-top:1px;font-weight:600}
 .tx-right{text-align:right;flex-shrink:0}
-.tx-amt{font-size:13px;font-weight:800}.tx-amt.p{color:var(--green)}.tx-amt.m{color:var(--red)}.tx-amt.s{color:var(--teal)}
+.tx-amt{font-size:13px;font-weight:800}
+.tx-amt.p{color:var(--green)}.tx-amt.m{color:var(--red)}.tx-amt.s{color:var(--teal)}
 .tx-time{font-size:10px;color:var(--text3);margin-top:1px}
 .empty{text-align:center;color:var(--text3);font-size:13px;font-weight:700;padding:28px 0}
 /* PENDING */
 .pend-card{background:var(--white);border-radius:var(--r2);padding:13px;margin-bottom:8px;box-shadow:var(--shadow2);border-left:3px solid var(--yellow)}
-.pend-title{font-size:13px;font-weight:800;margin-bottom:3px}
-.pend-meta{font-size:11px;color:var(--text2);font-weight:600;margin-bottom:8px}
 .pend-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.pend-title{font-size:13px;font-weight:800;margin-bottom:2px}
+.pend-meta{font-size:11px;color:var(--text2);font-weight:600;margin-bottom:2px}
 .pend-amt{font-size:15px;font-weight:900}
 .pend-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .pend-btn{border:none;border-radius:var(--r3);padding:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
 .pend-btn.ok{background:var(--green-bg);color:var(--green)}.pend-btn.no{background:var(--red-bg);color:var(--red)}
 /* ADMIN */
 .adm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 14px}
-.adm-btn{background:var(--white);border-radius:var(--r2);padding:15px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;box-shadow:var(--shadow2);border:none;cursor:pointer;font-family:'Nunito',sans-serif;transition:transform 0.15s}
-.adm-btn:active{transform:scale(0.95)}
-.adm-btn-ico{font-size:22px}.adm-btn-label{font-size:12px;font-weight:800;color:var(--text)}.adm-btn-sub{font-size:10px;color:var(--text2);font-weight:600}
+.adm-btn{background:var(--white);border-radius:var(--r2);padding:15px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;box-shadow:var(--shadow2);border:none;cursor:pointer;font-family:'Nunito',sans-serif;transition:transform .15s}
+.adm-btn:active{transform:scale(.95)}
+.adm-btn-ico{font-size:22px}.adm-btn-lbl{font-size:12px;font-weight:800;color:var(--text)}.adm-btn-sub{font-size:10px;color:var(--text2);font-weight:600}
 /* LIST */
 .list-item{background:var(--white);border-radius:var(--r2);padding:11px 13px;display:flex;align-items:center;gap:11px;margin-bottom:6px;box-shadow:var(--shadow2)}
 .list-ico{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:var(--teal3)}
@@ -91,27 +91,27 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 /* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:none;align-items:flex-end;backdrop-filter:blur(4px)}
 .overlay.open{display:flex}
-.sheet{background:var(--white);border-radius:24px 24px 0 0;padding:0 20px 44px;width:100%;max-height:90vh;overflow-y:auto;animation:up 0.3s cubic-bezier(0.34,1.4,0.64,1)}
+.sheet{background:var(--white);border-radius:24px 24px 0 0;padding:0 20px 44px;width:100%;max-height:90vh;overflow-y:auto;animation:up .3s cubic-bezier(.34,1.4,.64,1)}
 @keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 18px}
 .sheet-title{font-size:17px;font-weight:900;margin-bottom:18px}
 /* FORM */
-.f-lbl{font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px}
+.f-lbl{font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
 .f-grp{margin-bottom:14px}
 .acc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.acc-it{border:2px solid var(--border);border-radius:var(--r2);padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--white)}
+.acc-it{border:2px solid var(--border);border-radius:var(--r2);padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;background:var(--white)}
 .acc-it .e{font-size:20px;margin-bottom:3px}.acc-it .l{font-size:11px;color:var(--text2);font-weight:700}
 .acc-it.on{border-color:var(--teal);background:var(--teal3)}.acc-it.on .l{color:var(--teal2)}
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.cat-it{border:2px solid var(--border);border-radius:var(--r2);padding:11px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;color:var(--text2);background:var(--white);transition:all 0.2s}
+.cat-it{border:2px solid var(--border);border-radius:var(--r2);padding:11px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;color:var(--text2);background:var(--white);transition:all .2s}
 .cat-it.on{border-color:var(--teal);background:var(--teal3);color:var(--teal2)}
 .dir-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.dir-it{border:2px solid var(--border);border-radius:var(--r2);padding:11px;text-align:center;cursor:pointer;font-size:12px;font-weight:800;color:var(--text2);background:var(--white);transition:all 0.2s}
+.dir-it{border:2px solid var(--border);border-radius:var(--r2);padding:11px;text-align:center;cursor:pointer;font-size:12px;font-weight:800;color:var(--text2);background:var(--white);transition:all .2s}
 .dir-it.on{border-color:var(--teal);background:var(--teal3);color:var(--teal2)}
 .rol-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-.rol-it{border:2px solid var(--border);border-radius:var(--r2);padding:12px 14px;cursor:pointer;font-size:13px;font-weight:700;color:var(--text2);background:var(--white);transition:all 0.2s;display:flex;align-items:center;gap:10px}
+.rol-it{border:2px solid var(--border);border-radius:var(--r2);padding:12px 14px;cursor:pointer;font-size:13px;font-weight:700;color:var(--text2);background:var(--white);transition:all .2s}
 .rol-it.on{border-color:var(--teal);background:var(--teal3);color:var(--teal2)}
-input[type=number],input[type=text],select{width:100%;background:var(--bg);border:2px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:20px;font-weight:800;padding:13px 15px;outline:none;transition:border-color 0.2s;font-family:'Nunito',sans-serif;-webkit-appearance:none}
+input[type=number],input[type=text],select{width:100%;background:var(--bg);border:2px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:20px;font-weight:800;padding:13px 15px;outline:none;transition:border-color .2s;font-family:'Nunito',sans-serif;-webkit-appearance:none}
 input:focus,select:focus{border-color:var(--teal)}
 input::placeholder{color:var(--text3);font-weight:600;font-size:15px}
 input.sm,select.sm{font-size:15px;font-weight:700}
@@ -120,21 +120,20 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 .konv-sub{font-size:11px;color:var(--text2);font-weight:700;margin-top:3px}
 .hint{font-size:11px;color:var(--text3);font-weight:700;text-align:center;margin-top:5px}
 .hint b{color:var(--text2)}
-.sbtn{width:100%;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:16px;font-weight:900;padding:15px;cursor:pointer;margin-top:6px;font-family:'Nunito',sans-serif;transition:opacity 0.2s}
-.sbtn:active{opacity:0.85}.sbtn.red{background:var(--red)}.sbtn.yellow{background:var(--yellow)}.sbtn.green{background:var(--green)}.sbtn.blue{background:var(--blue)}
-.sbtn-sm{padding:10px 16px;font-size:13px;font-weight:800;border:none;border-radius:var(--r3);cursor:pointer;font-family:'Nunito',sans-serif;margin-top:6px;width:100%}
+.sbtn{width:100%;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:16px;font-weight:900;padding:15px;cursor:pointer;margin-top:6px;font-family:'Nunito',sans-serif;transition:opacity .2s}
+.sbtn:active{opacity:.85}.sbtn.red{background:var(--red)}.sbtn.yellow{background:var(--yellow)}.sbtn.green{background:var(--green)}.sbtn.blue{background:var(--blue)}
 /* NAV */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 16px rgba(0,0,0,0.05)}
 .nit{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;border:none;background:none;cursor:pointer;font-family:'Nunito',sans-serif}
 .nit-ico{font-size:21px;line-height:1}.nit-lbl{font-size:10px;color:var(--text3);font-weight:800}
 .nit.on .nit-lbl{color:var(--teal)}
 /* TOAST */
-.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);color:#fff;border-radius:24px;padding:9px 20px;font-size:13px;font-weight:800;opacity:0;transition:all 0.3s;z-index:400;white-space:nowrap;pointer-events:none;font-family:'Nunito',sans-serif}
+.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);color:#fff;border-radius:24px;padding:9px 20px;font-size:13px;font-weight:800;opacity:0;transition:all .3s;z-index:400;white-space:nowrap;pointer-events:none;font-family:'Nunito',sans-serif}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--green)}.toast.err{background:var(--red)}.toast.info{background:var(--teal2)}
 /* LOADER */
-.loader{position:fixed;inset:0;background:rgba(255,255,255,0.9);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.loader-spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite}
+.loader{position:fixed;inset:0;background:rgba(255,255,255,.95);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.loader-spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-txt{font-size:14px;font-weight:700;color:var(--text2)}
 .page{display:none}.page.active{display:block}
@@ -143,13 +142,11 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 </head>
 <body>
 
-<!-- LOADER -->
 <div class="loader" id="loader">
   <div class="loader-spin"></div>
   <div class="loader-txt">Yuklanmoqda...</div>
 </div>
 
-<!-- HEADER -->
 <div class="hdr">
   <div class="hdr-row">
     <div class="hdr-logo">TezFast <span>Hamyon</span></div>
@@ -158,7 +155,7 @@ input.sm,select.sm{font-size:15px;font-weight:700}
   <div class="hdr-name" id="user-name"></div>
 </div>
 
-<!-- ═══ PAGE: GAZNA ═══ -->
+<!-- GAZNA -->
 <div class="page" id="page-gazna">
   <div class="bal-card">
     <div class="bal-lbl">Umumiy balans</div>
@@ -171,7 +168,7 @@ input.sm,select.sm{font-size:15px;font-weight:700}
     <div class="stat-c"><div class="stat-lbl">📈 Oylik kirim</div><div class="stat-val g" id="s-kirim">—</div></div>
     <div class="stat-c"><div class="stat-lbl">📉 Oylik chiqim</div><div class="stat-val r" id="s-chiqim">—</div></div>
   </div>
-  <div class="actions" id="gazna-actions" style="grid-template-columns:repeat(3,1fr)">
+  <div class="actions">
     <button class="abtn" onclick="openM('chiqim-modal')"><div class="abtn-ico red">➖</div><span>Chiqim</span></button>
     <button class="abtn" onclick="openM('konvert-modal')"><div class="abtn-ico teal">⇄</div><span>Konvert</span></button>
     <button class="abtn" onclick="showPage('tarix')"><div class="abtn-ico blue">📋</div><span>Tarix</span></button>
@@ -180,47 +177,43 @@ input.sm,select.sm{font-size:15px;font-weight:700}
   <div class="hist" id="tx-short"></div>
 </div>
 
-<!-- ═══ PAGE: TARIX ═══ -->
+<!-- TARIX -->
 <div class="page" id="page-tarix">
   <div class="pg-title">📋 Tranzaksiyalar</div>
   <div class="hist" id="tx-full"></div>
 </div>
 
-<!-- ═══ PAGE: PENDING ═══ -->
+<!-- PENDING -->
 <div class="page" id="page-pending">
   <div class="pg-title">⏳ Tasdiqlash kutayotgan</div>
   <div style="padding:0 16px" id="pending-list"></div>
 </div>
 
-<!-- ═══ PAGE: WORKER ═══ -->
+<!-- WORKER -->
 <div class="page" id="page-worker">
   <div style="padding:16px">
     <div class="pg-title" style="padding:0 0 14px">📤 Rasxodlar</div>
-    <button class="sbtn green" onclick="openM('expense-modal')">+ Yangi rasxod yuborish</button>
-    <div style="font-size:14px;font-weight:800;margin:16px 0 10px">Mening rasxodlarim</div>
+    <button class="sbtn green" style="margin-bottom:16px" onclick="openM('expense-modal')">+ Yangi rasxod yuborish</button>
+    <div style="font-size:14px;font-weight:800;margin-bottom:10px">Mening rasxodlarim</div>
     <div id="my-exp-list"></div>
   </div>
 </div>
 
-<!-- ═══ PAGE: ADMIN ═══ -->
+<!-- ADMIN -->
 <div class="page" id="page-admin">
   <div class="pg-title">⚙️ Admin panel</div>
   <div class="adm-grid">
-    <button class="adm-btn" onclick="showSub('users')"><div class="adm-btn-ico">👥</div><div class="adm-btn-label">Foydalanuvchilar</div><div class="adm-btn-sub">Ro'yxat va boshqaruv</div></button>
-    <button class="adm-btn" onclick="openM('add-user-modal')"><div class="adm-btn-ico">➕</div><div class="adm-btn-label">Qo'shish</div><div class="adm-btn-sub">Yangi foydalanuvchi</div></button>
-    <button class="adm-btn" onclick="showSub('points')"><div class="adm-btn-ico">🏪</div><div class="adm-btn-label">Punktlar</div><div class="adm-btn-sub">58 ta punkt</div></button>
-    <button class="adm-btn" onclick="showSub('all-exp')"><div class="adm-btn-ico">📊</div><div class="adm-btn-label">Barcha rasxodlar</div><div class="adm-btn-sub">Punkt rasxodlari</div></button>
+    <button class="adm-btn" onclick="showSub('users')"><div class="adm-btn-ico">👥</div><div class="adm-btn-lbl">Foydalanuvchilar</div><div class="adm-btn-sub">Ro'yxat, boshqaruv</div></button>
+    <button class="adm-btn" onclick="openM('add-user-modal')"><div class="adm-btn-ico">➕</div><div class="adm-btn-lbl">Qo'shish</div><div class="adm-btn-sub">Yangi foydalanuvchi</div></button>
+    <button class="adm-btn" onclick="showSub('points')"><div class="adm-btn-ico">🏪</div><div class="adm-btn-lbl">Punktlar</div><div class="adm-btn-sub">58 ta punkt</div></button>
+    <button class="adm-btn" onclick="showSub('all-exp')"><div class="adm-btn-ico">📊</div><div class="adm-btn-lbl">Barcha rasxodlar</div><div class="adm-btn-sub">Punkt rasxodlari</div></button>
   </div>
-  <div id="sub-area" style="padding:0 16px"></div>
+  <div id="sub-area" style="padding:0 16px;display:none"></div>
 </div>
 
-<!-- ═══ MODALS ═══ -->
-
-<!-- CHIQIM -->
+<!-- MODALS -->
 <div class="overlay" id="chiqim-modal">
-  <div class="sheet">
-    <div class="handle"></div>
-    <div class="sheet-title">➖ Gazna chiqim</div>
+  <div class="sheet"><div class="handle"></div><div class="sheet-title">➖ Gazna chiqim</div>
     <div class="f-lbl">Hisob</div>
     <div class="acc-grid">
       <div class="acc-it on" data-acc="som" onclick="selAcc(this,'chiqim')"><div class="e">💵</div><div class="l">So'm</div></div>
@@ -233,11 +226,8 @@ input.sm,select.sm{font-size:15px;font-weight:700}
   </div>
 </div>
 
-<!-- KONVERT -->
 <div class="overlay" id="konvert-modal">
-  <div class="sheet">
-    <div class="handle"></div>
-    <div class="sheet-title">💱 Konvertatsiya</div>
+  <div class="sheet"><div class="handle"></div><div class="sheet-title">💱 Konvertatsiya</div>
     <div class="f-lbl">Yo'nalish</div>
     <div class="dir-grid">
       <div class="dir-it on" id="d-s2u" onclick="setDir('s2u')">💵 So'm → 💲 $</div>
@@ -250,11 +240,8 @@ input.sm,select.sm{font-size:15px;font-weight:700}
   </div>
 </div>
 
-<!-- EXPENSE -->
 <div class="overlay" id="expense-modal">
-  <div class="sheet">
-    <div class="handle"></div>
-    <div class="sheet-title">📤 Rasxod yuborish</div>
+  <div class="sheet"><div class="handle"></div><div class="sheet-title">📤 Rasxod yuborish</div>
     <div class="f-lbl">Kategoriya</div>
     <div class="cat-grid">
       <div class="cat-it on" data-cat="arenda" onclick="selCat(this)">🏢 Arenda</div>
@@ -274,11 +261,8 @@ input.sm,select.sm{font-size:15px;font-weight:700}
   </div>
 </div>
 
-<!-- ADD USER MODAL -->
 <div class="overlay" id="add-user-modal">
-  <div class="sheet">
-    <div class="handle"></div>
-    <div class="sheet-title">➕ Foydalanuvchi qo'shish</div>
+  <div class="sheet"><div class="handle"></div><div class="sheet-title">➕ Foydalanuvchi qo'shish</div>
     <div class="f-grp"><div class="f-lbl">Telegram ID</div><input type="number" class="sm" id="nu-id" placeholder="123456789" inputmode="numeric"></div>
     <div class="f-grp"><div class="f-lbl">Ism Familiya</div><input type="text" class="sm" id="nu-name" placeholder="Sarvar Karimov"></div>
     <div class="f-lbl">Rol</div>
@@ -288,14 +272,13 @@ input.sm,select.sm{font-size:15px;font-weight:700}
       <div class="rol-it" data-role="point_worker" onclick="selRole(this)">🏪 Punkt xodimi (rasxod yuboradi)</div>
     </div>
     <div id="pt-sel-wrap" style="display:none">
-      <div class="f-lbl">Punkt tanlang</div>
+      <div class="f-lbl">Punkt</div>
       <select class="sm" id="nu-point" style="margin-bottom:14px"></select>
     </div>
     <button class="sbtn" onclick="doAddUser()">✓ Qo'shish</button>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bnav" id="bnav"></div>
 <div class="toast" id="toast"></div>
 
@@ -304,107 +287,89 @@ const tg = window.Telegram?.WebApp;
 if(tg){ tg.expand(); tg.setHeaderColor('#00C9B1'); }
 
 // ── STATE ──
-let D = { role:null, fullName:'', pointCode:'', som:0, usd:0, karta:0, stats:{}, transactions:[], pending:[], myExpenses:[], users:[], points:[] };
-let UI = { page:'gazna', chiqimAcc:'som', konvDir:'s2u', expCat:'arenda', expCur:'som', selRole:'director' };
+let D = {role:null,fullName:'',pointCode:'',som:0,usd:0,karta:0,stats:{},transactions:[],pending:[],myExpenses:[],users:[],points:[]};
+let UI = {page:'gazna',chiqimAcc:'som',konvDir:'s2u',expCat:'arenda',expCur:'som',selRole:'director'};
 
 // ── FORMAT ──
-function fS(n){ return Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ') + ' so\'m'; }
-function fU(n){ return '$ ' + Math.round(n).toLocaleString('ru-RU').replace(/,/g,' '); }
+function fS(n){ n=n||0; return Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ') + " so'm"; }
+function fU(n){ n=n||0; return '$ ' + Math.round(n).toLocaleString('ru-RU').replace(/,/g,' '); }
 function fA(acc,n){ return acc==='usd'?fU(n):fS(n); }
+function nw(){ const d=new Date(); return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}); }
 
-// ── BOT BILAN ALOQA ──
-// Ma'lumot URL hash yoki tg.initDataUnsafe orqali keladi
-const TG_USER = tg?.initDataUnsafe?.user;
-const MY_UID = TG_USER?.id || null;
-
-// Botga amallar uchun sendData
-function sendToBot(data){
-  if(tg?.sendData){ tg.sendData(JSON.stringify(data)); }
-}
-
-// Ma'lumotni URL dan yoki localStorage dan olish
-function requestData(){
-  // 1. URL hash dan tekshir: ?d=... yoki #d=...
+// ── MA'LUMOT YUKLASH ──
+// Asosiy usul: URL parametrdan (?d=...) olingan JSON
+function loadData(){
   try{
     const params = new URLSearchParams(window.location.search);
-    const hashParams = new URLSearchParams(window.location.hash.replace('#',''));
-    const raw = params.get('d') || hashParams.get('d');
+    const raw = params.get('d');
     if(raw){
       const data = JSON.parse(decodeURIComponent(raw));
-      applyData(data); return;
+      applyData(data);
+      // localStorage ga saqlash (keyingi marta tez yuklash uchun)
+      try{ localStorage.setItem('tf_cache', JSON.stringify(data)); }catch(e){}
+      return;
     }
-  }catch(e){}
-  
-  // 2. localStorage dan oldingi ma'lumot
+  }catch(e){ console.error('URL parse error:', e); }
+
+  // URL da yo'q — localStorage ni tekshir
   try{
-    const cached = localStorage.getItem('tezfast_data');
+    const cached = localStorage.getItem('tf_cache');
     if(cached){
       const data = JSON.parse(cached);
       applyData(data);
       return;
     }
   }catch(e){}
-  
-  // 3. Demo rejim
-  showDemo();
+
+  // Hech narsa yo'q — yuklanmadi
+  document.getElementById('loader').style.display = 'none';
+  document.getElementById('role-badge').textContent = 'Kirish kerak';
+  document.getElementById('user-name').textContent = "Botda '💼 Hamyon' tugmasini bosing";
+  D.role='admin'; D.fullName=''; D.som=0; D.usd=0; D.karta=0;
+  D.stats={kirim_som:0,kirim_usd:0,kirim_karta:0,chiqim_som:0,chiqim_usd:0,chiqim_karta:0};
+  D.transactions=[]; D.pending=[]; D.myExpenses=[];
+  D.points=[]; D.users=[];
+  setupUI(); showPage('gazna');
 }
 
 function applyData(data){
-  if(!data || data.error){ showDemo(); return; }
+  if(!data || data.error){ loadData(); return; }
   Object.assign(D, data);
-  // Saqlash
-  try{ localStorage.setItem('tezfast_data', JSON.stringify(data)); }catch(e){}
   document.getElementById('loader').style.display = 'none';
   setupUI(); renderAll();
 }
 
-function showDemo(){
-  document.getElementById('loader').style.display = 'none';
-  if(!D.role){
-    D.role='admin'; D.fullName='Admin'; D.som=0; D.usd=0; D.karta=0;
-    D.stats={kirim_som:0,kirim_usd:0,kirim_karta:0,chiqim_som:0,chiqim_usd:0,chiqim_karta:0};
-    D.points=[]; D.users=[{id:6398350499,name:'Admin',role:'admin',point:'',active:1}];
-    toast('Yangilash uchun /start yuboring','info');
-  }
-  setupUI(); showPage(D.role==='point_worker'?'worker':'gazna');
-}
-
-// ── SETUP ──
+// ── UI SETUP ──
 function setupUI(){
-  const badges = {admin:'👑 Admin', director:'👔 Director', cashier:'💰 Kassir', point_worker:'🏪 Punkt'};
-  document.getElementById('role-badge').textContent = badges[D.role] || D.role || '—';
-  document.getElementById('user-name').textContent = D.fullName || '';
-  buildNav();
-
-  // Punkt selectini to'ldirish
+  const badges = {admin:'👑 Admin',director:'👔 Director',cashier:'💰 Kassir',point_worker:'🏪 Punkt'};
+  document.getElementById('role-badge').textContent = badges[D.role]||D.role||'—';
+  document.getElementById('user-name').textContent = D.fullName||'';
+  // Punkt select
   const sel = document.getElementById('nu-point');
-  sel.innerHTML = D.points.filter(p=>p.active).map(p=>`<option value="${p.code}">${p.code} — ${p.name}</option>`).join('');
+  sel.innerHTML = (D.points||[]).filter(p=>p.active).map(p=>`<option value="${p.code}">${p.code} — ${p.name}</option>`).join('');
+  buildNav();
+  showPage(D.role==='point_worker'?'worker':'gazna');
 }
 
 function buildNav(){
-  const navEl = document.getElementById('bnav');
-  let items = [];
+  const el = document.getElementById('bnav');
+  let items=[];
   if(D.role==='point_worker'){
-    items = [{ico:'📤',lbl:'Rasxod',page:'worker'}];
+    items=[{ico:'📤',lbl:'Rasxod',page:'worker'}];
   } else {
-    items = [{ico:'💼',lbl:'Gazna',page:'gazna'},{ico:'📋',lbl:'Tarix',page:'tarix'}];
+    items=[{ico:'💼',lbl:'Gazna',page:'gazna'},{ico:'📋',lbl:'Tarix',page:'tarix'}];
     if(D.role==='director'||D.role==='admin') items.push({ico:'⏳',lbl:'Kutayotgan',page:'pending'});
     if(D.role==='admin') items.push({ico:'⚙️',lbl:'Admin',page:'admin'});
   }
-  navEl.innerHTML = items.map(i=>
-    `<button class="nit ${UI.page===i.page?'on':''}" onclick="showPage('${i.page}')">
-      <div class="nit-ico">${i.ico}</div><div class="nit-lbl">${i.lbl}</div>
-    </button>`
-  ).join('');
+  el.innerHTML=items.map(i=>`<button class="nit ${UI.page===i.page?'on':''}" onclick="showPage('${i.page}')"><div class="nit-ico">${i.ico}</div><div class="nit-lbl">${i.lbl}</div></button>`).join('');
 }
 
-// ── PAGE ──
+// ── PAGES ──
 function showPage(p){
   document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
-  const pg = document.getElementById('page-'+p);
+  const pg=document.getElementById('page-'+p);
   if(pg) pg.classList.add('active');
-  UI.page = p;
-  buildNav();
+  UI.page=p; buildNav();
   if(p==='gazna') renderGazna();
   if(p==='tarix') renderTarix();
   if(p==='pending') renderPending();
@@ -412,57 +377,58 @@ function showPage(p){
 }
 
 // ── RENDER ──
-function renderAll(){ renderGazna(); if(UI.page==='tarix') renderTarix(); if(UI.page==='pending') renderPending(); if(UI.page==='worker') renderWorker(); }
+function renderAll(){ renderGazna(); }
 
 function renderGazna(){
-  const RATE = 12700;
-  const total = D.som + D.usd*RATE + D.karta;
-  document.getElementById('total-bal').textContent = fS(total);
-  document.getElementById('b-som').textContent   = fS(D.som);
-  document.getElementById('b-usd').textContent   = fU(D.usd);
-  document.getElementById('b-karta').textContent = fS(D.karta);
-  document.getElementById('s-kirim').textContent  = fS(D.stats.kirim_som||0);
-  document.getElementById('s-chiqim').textContent = fS(D.stats.chiqim_som||0);
-  renderTxList('tx-short', D.transactions.slice(0,8));
+  const RATE=12700;
+  const total=D.som+D.usd*RATE+D.karta;
+  document.getElementById('total-bal').textContent=fS(total);
+  document.getElementById('b-som').textContent=fS(D.som);
+  document.getElementById('b-usd').textContent=fU(D.usd);
+  document.getElementById('b-karta').textContent=fS(D.karta);
+  document.getElementById('s-kirim').textContent=fS(D.stats.kirim_som||0);
+  document.getElementById('s-chiqim').textContent=fS(D.stats.chiqim_som||0);
+  renderTxList('tx-short',(D.transactions||[]).slice(0,8));
 }
 
-function renderTarix(){ renderTxList('tx-full', D.transactions); }
+function renderTarix(){ renderTxList('tx-full',D.transactions||[]); }
 
-function renderTxList(elId, list){
-  const el = document.getElementById(elId);
+function renderTxList(elId,list){
+  const el=document.getElementById(elId);
   if(!el) return;
   if(!list||!list.length){ el.innerHTML='<div class="empty">Hali amaliyot yo\'q</div>'; return; }
   const icons={kirim:'➕',chiqim:'➖',konvert:'💱'};
-  el.innerHTML = list.map(t=>{
+  el.innerHTML=list.map(t=>{
     let amt='',cls='s',title='',sub='';
-    if(t.type==='kirim'){ amt='+'+fA(t.acc,t.amount); cls='p'; title=t.pointCode||'Kirim'; sub=t.acc==='usd'?'Dollar':t.acc==='karta'?'Karta':"So'm"; }
-    else if(t.type==='chiqim'){ amt='-'+fA(t.acc,t.amount); cls='m'; title=t.comment||'Chiqim'; sub=t.acc==='usd'?'Dollar':t.acc==='karta'?'Karta':"So'm"; }
+    if(t.type==='kirim'){ amt='+'+fA(t.acc||t.accFrom,t.amount); cls='p'; title=t.pointCode||'Kirim'; sub=t.acc==='usd'?'Dollar':t.acc==='karta'?'Karta':"So'm"; }
+    else if(t.type==='chiqim'){ amt='-'+fA(t.acc||t.accFrom,t.amount); cls='m'; title=t.comment||'Chiqim'; sub=t.acc==='usd'?'Dollar':t.acc==='karta'?'Karta':"So'm"; }
     else if(t.type==='konvert'){ amt=fA(t.accFrom,t.amount)+'→'+fA(t.accTo,t.amountTo||0); cls='s'; title='Konvert'; sub=(t.accFrom||'')+'→'+(t.accTo||''); }
-    const time = (t.date||'').split(' ')[1]||'';
+    const time=(t.date||'').split(' ')[1]||'';
     return `<div class="tx"><div class="tx-ico ${t.type}">${icons[t.type]||'•'}</div><div class="tx-info"><div class="tx-title">${title}</div><div class="tx-sub">${sub}</div></div><div class="tx-right"><div class="tx-amt ${cls}">${amt}</div><div class="tx-time">${time}</div></div></div>`;
   }).join('');
 }
 
 function renderPending(){
-  const el = document.getElementById('pending-list');
-  const list = (D.pending||[]).filter(e=>e.status==='pending');
+  const el=document.getElementById('pending-list');
+  const list=(D.pending||[]).filter(e=>e.status==='pending');
   if(!list.length){ el.innerHTML='<div class="empty">Kutayotgan rasxod yo\'q ✅</div>'; return; }
   const cats={arenda:'🏢 Arenda',oylik:'👷 Oylik',yolkira:"🚗 Yo'lkira",boshqa:'📦 Boshqa'};
-  el.innerHTML = list.map(e=>`
+  el.innerHTML=list.map(e=>`
     <div class="pend-card">
       <div class="pend-top"><div><div class="pend-title">${cats[e.category]||e.category}</div><div class="pend-meta">🏪 ${e.pointCode} • 👤 ${e.workerName}</div><div class="pend-meta">📝 ${e.comment}</div></div><div class="pend-amt">${fA(e.currency,e.amount)}</div></div>
+      <div style="font-size:11px;color:var(--text3)">${e.date||''}</div>
       <div class="pend-btns"><button class="pend-btn ok" onclick="appExp(${e.id})">✅ Tasdiqlash</button><button class="pend-btn no" onclick="rejExp(${e.id})">❌ Rad etish</button></div>
     </div>`).join('');
 }
 
 function renderWorker(){
-  const el = document.getElementById('my-exp-list');
+  const el=document.getElementById('my-exp-list');
   if(!el) return;
-  const list = D.myExpenses||[];
+  const list=D.myExpenses||[];
   if(!list.length){ el.innerHTML='<div class="empty">Hali yo\'q</div>'; return; }
   const cats={arenda:'🏢 Arenda',oylik:'👷 Oylik',yolkira:"🚗 Yo'lkira",boshqa:'📦 Boshqa'};
   const sico={pending:'⏳',approved:'✅',rejected:'❌'};
-  el.innerHTML = list.map(e=>`
+  el.innerHTML=list.map(e=>`
     <div class="list-item">
       <div class="list-ico">${sico[e.status]||'•'}</div>
       <div class="list-info"><div class="list-title">${cats[e.category]||e.category} — ${fA(e.currency,e.amount)}</div><div class="list-sub">${e.date||''} ${e.status==='rejected'&&e.rejectNote?'• '+e.rejectNote:''}</div></div>
@@ -476,10 +442,10 @@ function openM(id){
   if(id==='konvert-modal'){ const acc=UI.konvDir==='s2u'?'som':'usd'; document.getElementById('k-hint').textContent=fA(acc,D[acc]||0); }
   if(id==='add-user-modal') updPtSel();
 }
-document.querySelectorAll('.overlay').forEach(el=>{ el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('open'); }); });
+document.querySelectorAll('.overlay').forEach(el=>el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('open'); }));
 function closeAll(){ document.querySelectorAll('.overlay').forEach(el=>el.classList.remove('open')); }
 
-// ── SELECTORS ──
+// ── SELECT ──
 function selAcc(el,m){ el.closest('.acc-grid').querySelectorAll('.acc-it').forEach(i=>i.classList.remove('on')); el.classList.add('on'); if(m==='chiqim'){ UI.chiqimAcc=el.dataset.acc; document.getElementById('chiqim-hint').textContent=fA(UI.chiqimAcc,D[UI.chiqimAcc]||0); } }
 function selCat(el){ el.closest('.cat-grid').querySelectorAll('.cat-it').forEach(i=>i.classList.remove('on')); el.classList.add('on'); UI.expCat=el.dataset.cat; }
 function selCur(el){ el.closest('.acc-grid').querySelectorAll('.acc-it').forEach(i=>i.classList.remove('on')); el.classList.add('on'); UI.expCur=el.dataset.cur; }
@@ -491,8 +457,7 @@ function setDir(d){
   document.getElementById('d-u2s').classList.toggle('on',d==='u2s');
   document.getElementById('k-from-lbl').textContent=d==='s2u'?"Sarflanadigan (so'm)":"Sarflanadigan ($)";
   document.getElementById('k-to-lbl').textContent=d==='s2u'?"Olinadigan ($)":"Olinadigan (so'm)";
-  document.getElementById('k-from').value='';
-  document.getElementById('k-to').value='';
+  document.getElementById('k-from').value=''; document.getElementById('k-to').value='';
   document.getElementById('k-rate').textContent='Kurs: —';
   const acc=d==='s2u'?'som':'usd';
   document.getElementById('k-hint').textContent=fA(acc,D[acc]||0);
@@ -505,114 +470,115 @@ function calcR(){
   document.getElementById('k-rate').textContent='Kurs: 1$ = '+fS(rate);
 }
 
-// ── ACTIONS ──
+// Botga amal yuborish (web_app_data)
+function sendAction(data){
+  if(tg?.sendData){ tg.sendData(JSON.stringify(data)); }
+  else { toast('Bot bilan bog\'liq emas','info'); }
+  // Local state yangilash
+  try{ localStorage.removeItem('tf_cache'); }catch(e){}
+}
+
+// ── CHIQIM ──
 function doChiqim(){
   const amt=parseFloat(document.getElementById('chiqim-amt').value);
   const izoh=document.getElementById('chiqim-izoh').value.trim();
-  if(!amt||amt<=0){toast('Miqdor kiriting!','err');return;}
-  if(!izoh){toast('Izoh kiriting!','err');return;}
-  if((D[UI.chiqimAcc]||0)<amt){toast("Mablag' yetarli emas!",'err');return;}
-  sendToBot({action:'chiqim',acc:UI.chiqimAcc,amount:amt,comment:izoh});
+  if(!amt||amt<=0){ toast('Miqdor kiriting!','err'); return; }
+  if(!izoh){ toast('Izoh kiriting!','err'); return; }
+  if((D[UI.chiqimAcc]||0)<amt){ toast("Mablag' yetarli emas!",'err'); return; }
+  sendAction({action:'chiqim',acc:UI.chiqimAcc,amount:amt,comment:izoh});
   D[UI.chiqimAcc]-=amt;
   D.transactions.unshift({type:'chiqim',acc:UI.chiqimAcc,amount:amt,comment:izoh,date:nw()});
-  renderGazna();
-  document.getElementById('chiqim-amt').value='';
-  document.getElementById('chiqim-izoh').value='';
+  D.stats.chiqim_som=(D.stats.chiqim_som||0)+(UI.chiqimAcc==='som'?amt:0);
+  renderGazna(); document.getElementById('chiqim-amt').value=''; document.getElementById('chiqim-izoh').value='';
   closeAll(); toast('-'+fA(UI.chiqimAcc,amt),'err');
 }
 
+// ── KONVERT ──
 function doKonvert(){
   const f=parseFloat(document.getElementById('k-from').value);
   const t=parseFloat(document.getElementById('k-to').value);
-  if(!f||f<=0){toast('Sarflanadigan miqdor kiriting!','err');return;}
-  if(!t||t<=0){toast('Olinadigan miqdor kiriting!','err');return;}
+  if(!f||f<=0){ toast('Sarflanadigan miqdor kiriting!','err'); return; }
+  if(!t||t<=0){ toast('Olinadigan miqdor kiriting!','err'); return; }
   const af=UI.konvDir==='s2u'?'som':'usd';
   const at=UI.konvDir==='s2u'?'usd':'som';
-  if((D[af]||0)<f){toast("Mablag' yetarli emas!",'err');return;}
+  if((D[af]||0)<f){ toast("Mablag' yetarli emas!",'err'); return; }
   const rate=UI.konvDir==='s2u'?Math.round(f/t):Math.round(t/f);
-  sendToBot({action:'konvert',acc_from:af,acc_to:at,amount_from:f,amount_to:t,rate});
+  sendAction({action:'konvert',acc_from:af,acc_to:at,amount_from:f,amount_to:t,rate});
   D[af]-=f; D[at]+=t;
   D.transactions.unshift({type:'konvert',accFrom:af,accTo:at,amount:f,amountTo:t,date:nw()});
-  renderGazna();
-  document.getElementById('k-from').value='';
-  document.getElementById('k-to').value='';
+  renderGazna(); document.getElementById('k-from').value=''; document.getElementById('k-to').value='';
   closeAll(); toast(fA(af,f)+' → '+fA(at,t),'ok');
 }
 
+// ── EXPENSE ──
 function doExpense(){
   const amt=parseFloat(document.getElementById('exp-amt').value);
   const izoh=document.getElementById('exp-izoh').value.trim();
-  if(!amt||amt<=0){toast('Miqdor kiriting!','err');return;}
-  if(!izoh){toast('Izoh kiriting!','err');return;}
-  sendToBot({action:'add_expense',category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh});
-  const newExp={id:Date.now(),category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh,status:'pending',date:nw()};
-  D.myExpenses.unshift(newExp);
-  document.getElementById('exp-amt').value='';
-  document.getElementById('exp-izoh').value='';
+  if(!amt||amt<=0){ toast('Miqdor kiriting!','err'); return; }
+  if(!izoh){ toast('Izoh kiriting!','err'); return; }
+  sendAction({action:'add_expense',category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh});
+  D.myExpenses.unshift({id:Date.now(),category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh,status:'pending',date:nw()});
+  document.getElementById('exp-amt').value=''; document.getElementById('exp-izoh').value='';
   closeAll(); renderWorker(); toast('Director ga yuborildi!','info');
 }
 
+// ── ADD USER ──
 function doAddUser(){
   const tid=document.getElementById('nu-id').value.trim();
   const name=document.getElementById('nu-name').value.trim();
   const role=UI.selRole;
   const pt=role==='point_worker'?document.getElementById('nu-point').value:'';
-  if(!tid||isNaN(parseInt(tid))){toast('Telegram ID kiriting!','err');return;}
-  if(!name){toast('Ism kiriting!','err');return;}
-  sendToBot({action:'add_user',telegram_id:parseInt(tid),full_name:name,role,point_code:pt||null});
+  if(!tid||isNaN(parseInt(tid))){ toast('Telegram ID kiriting!','err'); return; }
+  if(!name){ toast('Ism kiriting!','err'); return; }
+  sendAction({action:'add_user',telegram_id:parseInt(tid),full_name:name,role,point_code:pt||null});
   D.users.push({id:parseInt(tid),name,role,point:pt,active:1});
-  document.getElementById('nu-id').value='';
-  document.getElementById('nu-name').value='';
-  closeAll(); toast('✅ Foydalanuvchi qo\'shildi!','ok');
+  document.getElementById('nu-id').value=''; document.getElementById('nu-name').value='';
+  closeAll(); toast('✅ Qo\'shildi!','ok'); showSub('users');
 }
 
+// ── APPROVE/REJECT ──
 function appExp(id){
-  sendToBot({action:'approve_expense',exp_id:id});
-  const e=D.pending.find(x=>x.id===id);
-  if(e) e.status='approved';
+  sendAction({action:'approve_expense',exp_id:id});
+  const e=D.pending.find(x=>x.id===id); if(e) e.status='approved';
   renderPending(); toast('✅ Tasdiqlandi!','ok');
 }
-
 function rejExp(id){
-  const note=prompt('Rad etish sababi:');
+  const note=prompt("Rad etish sababi:");
   if(!note) return;
-  sendToBot({action:'reject_expense',exp_id:id,note});
-  const e=D.pending.find(x=>x.id===id);
-  if(e){ e.status='rejected'; e.rejectNote=note; }
+  sendAction({action:'reject_expense',exp_id:id,note});
+  const e=D.pending.find(x=>x.id===id); if(e){ e.status='rejected'; e.rejectNote=note; }
   renderPending(); toast('❌ Rad etildi','err');
 }
-
 function delUser(tid){
-  if(!confirm('O\'chirishni tasdiqlaysizmi?')) return;
-  sendToBot({action:'del_user',telegram_id:tid});
+  if(!confirm("O'chirilsinmi?")) return;
+  sendAction({action:'del_user',telegram_id:tid});
   D.users=D.users.filter(u=>u.id!==tid);
-  showSub('users'); toast('O\'chirildi','err');
+  showSub('users'); toast("O'chirildi",'err');
 }
 
 // ── ADMIN SUBPAGES ──
 function showSub(name){
-  const el=document.getElementById('sub-area');
-  el.style.display='block';
+  const el=document.getElementById('sub-area'); el.style.display='block';
   const icons={admin:'👑',director:'👔',cashier:'💰',point_worker:'🏪'};
   const cats={arenda:'🏢 Arenda',oylik:'👷 Oylik',yolkira:"🚗 Yo'lkira",boshqa:'📦 Boshqa'};
   const sico={pending:'⏳',approved:'✅',rejected:'❌'};
   if(name==='users'){
-    const rows=D.users.map(u=>`
+    const rows=(D.users||[]).map(u=>`
       <div class="list-item">
         <div class="list-ico">${icons[u.role]||'👤'}</div>
         <div class="list-info"><div class="list-title">${u.name}</div><div class="list-sub">ID: ${u.id}${u.point?' • '+u.point:''}</div></div>
         <span class="badge ${u.role}">${u.role}</span>
         <button class="del-btn" onclick="delUser(${u.id})">❌</button>
       </div>`).join('');
-    el.innerHTML=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">👥 Foydalanuvchilar (${D.users.length} ta)</div>${rows||'<div class="empty">Hali yo\'q</div>'}`;
+    el.innerHTML=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">👥 Foydalanuvchilar (${(D.users||[]).length} ta)</div>${rows||'<div class="empty">Hali yo\'q</div>'}`;
   } else if(name==='points'){
-    const rows=D.points.map(p=>`
+    const rows=(D.points||[]).map(p=>`
       <div class="list-item">
         <div class="list-ico">🏪</div>
         <div class="list-info"><div class="list-title">${p.code}</div><div class="list-sub">${p.name}</div></div>
         <span class="badge ${p.active?'cashier':'admin'}">${p.active?'Faol':'Noaktiv'}</span>
       </div>`).join('');
-    el.innerHTML=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">🏪 Punktlar (${D.points.length} ta)</div>${rows}`;
+    el.innerHTML=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">🏪 Punktlar (${(D.points||[]).length} ta)</div>${rows}`;
   } else if(name==='all-exp'){
     const all=D.pending||[];
     const rows=all.map(e=>`
@@ -631,10 +597,9 @@ function toast(msg,type='ok'){
   el.textContent=msg; el.className='toast show '+type;
   clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('show'),2500);
 }
-function nw(){ const d=new Date(); return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}); }
 
 // ── INIT ──
-requestData();
+loadData();
 </script>
 </body>
 </html>
