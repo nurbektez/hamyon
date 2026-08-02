@@ -123,61 +123,54 @@ async function main() {
   // =====================================================================
   {
     const s = newSlide();
-    // soft decorative rings (behind the panel, right edge)
-    s.addShape(OVAL, { x: 7.3, y: -1.5, w: 7.6, h: 7.6, fill: { color: INK }, line: { color: "1E1E2A", width: 1 } });
-    s.addShape(OVAL, { x: 8.6, y: 1.9, w: 6.4, h: 6.4, fill: { color: INK }, line: { color: "1E1E2A", width: 1 } });
+
+    // full-bleed poster on the right
+    s.addImage({
+      path: "assets/poster.jpg",
+      x: 7.95, y: 0, w: 5.383, h: 7.5,
+      sizing: { type: "cover", w: 5.383, h: 7.5 },
+    });
 
     s.addText("MERGAN PRODUCTION", {
-      x: ML, y: 1.15, w: 6.6, h: 0.3, margin: 0,
+      x: ML, y: 1.05, w: 6.6, h: 0.3, margin: 0,
       fontFace: HEAD, fontSize: 12, bold: true, color: GOLD, charSpacing: 3,
     });
-    s.addText("SHUNAQASI HAM\nBO‘P TURADI", {
-      x: ML, y: 1.62, w: 6.8, h: 2.1, margin: 0,
-      fontFace: HEAD, fontSize: 46, bold: true, color: WHITE, lineSpacing: 50,
+    s.addText("SHUNAQASI HAM\nBO\u2018P TURADI", {
+      x: ML, y: 1.52, w: 6.9, h: 2.1, margin: 0, valign: "top",
+      fontFace: HEAD, fontSize: 44, bold: true, color: WHITE, lineSpacing: 50,
     });
-    p(s, "Komedik yashirin kamera ko‘rsatuvi — O‘zbekistonning mashhur shaxslari ishtirokida.", {
-      x: ML, y: 3.88, w: 6.55, h: 0.95, fontSize: 15, color: MUTED, lineSpacing: 26,
+    p(s, "Komedik yashirin kamera ko\u2018rsatuvi \u2014 O\u2018zbekistonning mashhur shaxslari ishtirokida.", {
+      x: ML, y: 3.5, w: 6.5, h: 0.9, fontSize: 15, color: MUTED, lineSpacing: 26,
     });
-
-    card(s, ML, 5.05, 4.55, 0.95, { fill: PANEL, radius: 0.12 });
-    badge(s, ML + 0.25, 5.28, 0.5, I.handshake, { fill: INK });
-    s.addText("KOMMERSIYA TAKLIFI", {
-      x: ML + 0.95, y: 5.25, w: 3.4, h: 0.28, margin: 0,
-      fontFace: HEAD, fontSize: 11, bold: true, color: GOLD, charSpacing: 2,
-    });
-    p(s, "Homiylik va hamkorlik dasturi", {
-      x: ML + 0.95, y: 5.55, w: 3.4, h: 0.3, fontSize: 13, color: MUTED, lineSpacing: 16,
-    });
-
-    // right showcase panel
-    card(s, 8.05, 1.15, 4.58, 5.2, { fill: PANEL, radius: 0.14 });
-    s.addShape(OVAL, { x: 8.45, y: 1.55, w: 0.22, h: 0.22, fill: { color: RED }, line: { color: RED, width: 0.5 } });
-    s.addText("REC", {
-      x: 8.75, y: 1.5, w: 1.2, h: 0.3, margin: 0,
-      fontFace: HEAD, fontSize: 12, bold: true, color: RED, charSpacing: 2,
-    });
-    s.addShape(OVAL, { x: 9.85, y: 2.35, w: 1.0, h: 1.0, fill: { color: PANEL2 }, line: { color: LINE, width: 1 } });
-    s.addImage({ data: I.camera, x: 10.1, y: 2.6, w: 0.5, h: 0.5 });
 
     const teaser = [
       ["62 400+", "YouTube obunachi"],
-      ["3,6 mln+", "eng yuqori ko‘rish"],
-      ["48", "original son — yiliga"],
+      ["48", "original son \u2014 yiliga"],
+      ["3,6 mln+", "eng yuqori ko\u2018rish"],
     ];
     teaser.forEach(([v, l], i) => {
-      const y = 3.75 + i * 0.85;
+      const x = ML + i * 2.3;
       s.addText(v, {
-        x: 8.45, y, w: 1.9, h: 0.4, margin: 0,
-        fontFace: HEAD, fontSize: 20, bold: true, color: WHITE,
+        x, y: 4.6, w: 2.15, h: 0.45, margin: 0,
+        fontFace: HEAD, fontSize: 22, bold: true, color: WHITE,
       });
-      p(s, l, { x: 10.35, y: y + 0.06, w: 2.0, h: 0.32, fontSize: 12, color: MUTED, align: "right", lineSpacing: 14 });
-      if (i < 2) s.addShape(RECT, { x: 8.45, y: y + 0.58, w: 3.9, h: 0.01, fill: { color: LINE }, line: { color: LINE, width: 0.5 } });
+      p(s, l, { x, y: 5.05, w: 2.15, h: 0.5, fontSize: 11.5, lineSpacing: 15 });
+    });
+
+    card(s, ML, 5.85, 4.85, 0.95, { fill: PANEL, radius: 0.12 });
+    badge(s, ML + 0.25, 6.08, 0.5, I.handshake, { fill: INK });
+    s.addText("KOMMERSIYA TAKLIFI", {
+      x: ML + 0.95, y: 6.05, w: 3.7, h: 0.28, margin: 0,
+      fontFace: HEAD, fontSize: 11, bold: true, color: GOLD, charSpacing: 2,
+    });
+    p(s, "Homiylik va hamkorlik dasturi", {
+      x: ML + 0.95, y: 6.35, w: 3.7, h: 0.3, fontSize: 13, color: MUTED, lineSpacing: 16,
     });
 
     s.addNotes(
-      "0:00–0:10 | Kirish. Kamera 1 (umumiy plan).\n" +
+      "0:00\u20130:10 | Kirish. Kamera 1 (umumiy plan).\n" +
       "Jalol: Assalomu alaykum! Sarvar: Assalomu alaykum!\n" +
-      "Jalol: Biz sizlarga Mergan Production’ning yangi loyihasi — «Shunaqasi ham bo‘p turadi» komedik yashirin kamera shousini taqdim etamiz.\n" +
+      "Jalol: Biz sizlarga Mergan Production\u2019ning yangi loyihasi \u2014 \u00abShunaqasi ham bo\u2018p turadi\u00bb komedik yashirin kamera shousini taqdim etamiz.\n" +
       "Montaj: loyiha logotipi, dynamic intro, studio kadrlari, Mergan Production logotipi."
     );
   }
@@ -627,13 +620,17 @@ async function main() {
   // 11 — CTA (accent)
   // =====================================================================
   {
-    const s = newSlide(RED);
-    s.addShape(OVAL, { x: -1.6, y: -2.2, w: 6.6, h: 6.6, fill: { color: RED }, line: { color: RED_DK, width: 1.25 } });
-    s.addShape(OVAL, { x: 9.2, y: 3.2, w: 6.4, h: 6.4, fill: { color: RED }, line: { color: RED_DK, width: 1.25 } });
+    const s = newSlide(INK);
+    s.addImage({
+      path: "assets/banner.jpg",
+      x: 0, y: 0, w: W, h: H,
+      sizing: { type: "cover", w: W, h: H },
+    });
+    s.addShape(RECT, { x: 0, y: 0, w: W, h: H, fill: { color: INK, transparency: 16 }, line: { color: INK, width: 0.5 } });
 
     s.addText("TAKLIF", {
       x: 1.4, y: 1.75, w: 10.5, h: 0.32, margin: 0, align: "center",
-      fontFace: HEAD, fontSize: 12, bold: true, color: "FFE0E2", charSpacing: 3.5,
+      fontFace: HEAD, fontSize: 12, bold: true, color: GOLD, charSpacing: 3.5,
     });
     s.addText("Brendingizni millionlab tomoshabinlarga\nzamonaviy va tabiiy formatda taniting", {
       x: 1.4, y: 2.35, w: 10.5, h: 1.7, margin: 0, align: "center",
@@ -641,12 +638,12 @@ async function main() {
     });
     s.addText("Sizni «Shunaqasi ham bo‘p turadi» loyihasining rasmiy hamkori bo‘lishga taklif qilamiz.", {
       x: 1.0, y: 4.25, w: 11.33, h: 0.5, margin: 0, align: "center",
-      fontFace: BODY, fontSize: 17, color: "FFE9EA",
+      fontFace: BODY, fontSize: 17, color: "F0F0F5",
     });
-    s.addShape(RR, { x: 4.97, y: 5.15, w: 3.4, h: 0.8, rectRadius: 0.12, fill: { color: WHITE }, line: { color: WHITE, width: 0.75 } });
+    s.addShape(RR, { x: 4.97, y: 5.15, w: 3.4, h: 0.8, rectRadius: 0.12, fill: { color: RED }, line: { color: RED, width: 0.75 } });
     s.addText("HAMKOR BO‘LISH", {
       x: 4.97, y: 5.34, w: 3.4, h: 0.42, margin: 0, align: "center",
-      fontFace: HEAD, fontSize: 13, bold: true, color: RED_DK, charSpacing: 2,
+      fontFace: HEAD, fontSize: 13, bold: true, color: WHITE, charSpacing: 2,
     });
     s.addNotes(
       "1:50–2:05 | Yakun. Kamera 1 + Kamera 2.\n" +
@@ -662,16 +659,17 @@ async function main() {
     const s = newSlide();
     s.addShape(OVAL, { x: 8.9, y: -1.2, w: 6.2, h: 6.2, fill: { color: INK }, line: { color: "1E1E2A", width: 1 } });
 
+    s.addImage({
+      path: "assets/logo.jpg",
+      x: ML, y: 1.5, w: 3.45, h: 3.45,
+      sizing: { type: "cover", w: 3.45, h: 3.45 },
+    });
     s.addText("MERGAN PRODUCTION", {
-      x: ML, y: 1.5, w: 7, h: 0.32, margin: 0,
+      x: ML, y: 5.2, w: 5.6, h: 0.32, margin: 0,
       fontFace: HEAD, fontSize: 12, bold: true, color: GOLD, charSpacing: 3,
     });
-    s.addText("SHUNAQASI HAM\nBO‘P TURADI", {
-      x: ML, y: 1.95, w: 6.5, h: 1.7, margin: 0,
-      fontFace: HEAD, fontSize: 38, bold: true, color: WHITE, lineSpacing: 44,
-    });
     p(s, "Hamkorlik shartlari va narxlar bo‘yicha to‘liq ma’lumot uchun biz bilan bog‘laning.", {
-      x: ML, y: 3.75, w: 5.6, h: 0.8, fontSize: 14, lineSpacing: 22,
+      x: ML, y: 5.6, w: 5.6, h: 0.85, fontSize: 14, lineSpacing: 22,
     });
 
     const contacts = [
@@ -690,15 +688,6 @@ async function main() {
       });
       p(s, val, { x: 8.25, y: y + 0.4, w: 4.0, h: 0.35, fontSize: 14, color: val.includes("_") ? MUTED : WHITE, lineSpacing: 18 });
       if (i < 3) s.addShape(RECT, { x: 7.4, y: y + 0.9, w: 4.88, h: 0.01, fill: { color: LINE }, line: { color: LINE, width: 0.5 } });
-    });
-    const mini = [["62 400+", "obunachi"], ["48", "son / yil"], ["3,6 mln+", "ko‘rish"]];
-    mini.forEach(([v, l], i) => {
-      const x = ML + i * 1.95;
-      s.addText(v, {
-        x, y: 4.95, w: 1.8, h: 0.4, margin: 0,
-        fontFace: HEAD, fontSize: 19, bold: true, color: GOLD,
-      });
-      p(s, l, { x, y: 5.36, w: 1.8, h: 0.32, fontSize: 12, lineSpacing: 15 });
     });
     s.addText("MERGAN PRODUCTION", {
       x: ML, y: 6.86, w: 5, h: 0.3, margin: 0,

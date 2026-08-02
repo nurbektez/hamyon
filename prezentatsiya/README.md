@@ -8,8 +8,12 @@ Manba: `Shunaqasi_ham_bop_turadi_Commercial_Proposal_Senariy.docx` (2 daqiqalik 
 | Fayl | Tavsif |
 |---|---|
 | `Shunaqasi_ham_bop_turadi_Kommersiya_taklifi.pptx` | Tayyor taqdimot — 12 slayd, 16:9 |
+| `Shunaqasi_ham_bop_turadi_Kommersiya_taklifi.pdf` | Yuborish uchun PDF nusxa |
 | `build.js` | Taqdimotni qayta yig‘uvchi skript (pptxgenjs) |
 | `icons.js` | `react-icons` ikonkalarini PNG’ga aylantiruvchi yordamchi |
+| `assets/poster.jpg` | Vertikal afisha — 1-slayd (muqova) |
+| `assets/banner.jpg` | Keng banner — 11-slayd (CTA foni) |
+| `assets/logo.jpg` | Logotip — 12-slayd (kontakt) |
 
 ## Tuzilishi
 
