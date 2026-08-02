@@ -124,11 +124,11 @@ async function main() {
   {
     const s = newSlide();
 
-    // full-bleed poster on the right
+    // show logo mark on the right
     s.addImage({
-      path: "assets/poster.jpg",
-      x: 7.95, y: 0, w: 5.383, h: 7.5,
-      sizing: { type: "cover", w: 5.383, h: 7.5 },
+      path: "assets/logo.jpg",
+      x: 8.05, y: 1.35, w: 4.8, h: 4.8,
+      sizing: { type: "cover", w: 4.8, h: 4.8 },
     });
 
     s.addText("MERGAN PRODUCTION", {
@@ -660,9 +660,9 @@ async function main() {
     s.addShape(OVAL, { x: 8.9, y: -1.2, w: 6.2, h: 6.2, fill: { color: INK }, line: { color: "1E1E2A", width: 1 } });
 
     s.addImage({
-      path: "assets/logo.jpg",
-      x: ML, y: 1.5, w: 3.45, h: 3.45,
-      sizing: { type: "cover", w: 3.45, h: 3.45 },
+      path: "assets/poster.jpg",
+      x: ML, y: 1.5, w: 2.6, h: 3.45,
+      sizing: { type: "cover", w: 2.6, h: 3.45 },
     });
     s.addText("MERGAN PRODUCTION", {
       x: ML, y: 5.2, w: 5.6, h: 0.32, margin: 0,
@@ -673,21 +673,19 @@ async function main() {
     });
 
     const contacts = [
-      [I.phone, "Telefon", "+998 __ ___ __ __"],
-      [I.telegram, "Telegram", "@ ____________"],
-      [I.instagram, "Instagram", "@ ____________"],
+      [I.phone, "Telefon", "+998 95 124 44 84"],
       [I.youtube, "YouTube", "Mergan Production"],
     ];
-    card(s, 7.05, 1.5, 5.58, 4.5, { fill: PANEL });
+    card(s, 7.05, 1.5, 5.58, 3.45, { fill: PANEL });
     contacts.forEach(([ic, label, val], i) => {
-      const y = 1.9 + i * 1.05;
-      badge(s, 7.4, y + 0.12, 0.66, ic, { fill: INK });
+      const y = 2.15 + i * 1.4;
+      badge(s, 7.45, y + 0.15, 0.72, ic, { fill: INK });
       s.addText(label, {
-        x: 8.25, y: y + 0.08, w: 4.0, h: 0.28, margin: 0,
+        x: 8.4, y: y + 0.1, w: 3.9, h: 0.28, margin: 0,
         fontFace: HEAD, fontSize: 10.5, bold: true, color: GOLD, charSpacing: 1.5,
       });
-      p(s, val, { x: 8.25, y: y + 0.4, w: 4.0, h: 0.35, fontSize: 14, color: val.includes("_") ? MUTED : WHITE, lineSpacing: 18 });
-      if (i < 3) s.addShape(RECT, { x: 7.4, y: y + 0.9, w: 4.88, h: 0.01, fill: { color: LINE }, line: { color: LINE, width: 0.5 } });
+      p(s, val, { x: 8.4, y: y + 0.44, w: 3.9, h: 0.38, fontSize: 16, color: WHITE, lineSpacing: 20 });
+      if (i < 1) s.addShape(RECT, { x: 7.45, y: y + 1.05, w: 4.83, h: 0.01, fill: { color: LINE }, line: { color: LINE, width: 0.5 } });
     });
     s.addText("MERGAN PRODUCTION", {
       x: ML, y: 6.86, w: 5, h: 0.3, margin: 0,
@@ -696,8 +694,8 @@ async function main() {
     s.addNotes(
       "2:05–2:15 | Kontakt. Qora fon.\n" +
       "MERGAN PRODUCTION · SHUNAQASI HAM BO‘P TURADI\n" +
-      "Telefon / Telegram / Instagram / YouTube — yakuniy logotip animatsiyasi.\n" +
-      "ESLATMA: telefon raqami va akkaunt manzillarini yakuniy ma’lumot bilan almashtiring."
+      "Telefon: +998 95 124 44 84 · YouTube: Mergan Production\n" +
+      "Yakuniy logotip animatsiyasi."
     );
   }
 
