@@ -284,7 +284,14 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 
 <script>
 const tg = window.Telegram?.WebApp;
-if(tg){ tg.expand(); tg.setHeaderColor('#00C9B1'); }
+// Eski Telegram klientlarida setHeaderColor/expand "WebAppMethodUnsupported" xatosi beradi.
+// Agar xato ushlanmasa butun skript to'xtaydi va ilova bo'm-bo'sh ochiladi.
+function tgSafe(fn){ try{ fn(); }catch(e){ console.warn('Telegram API:', e); } }
+if(tg){
+  tgSafe(()=>tg.ready());
+  tgSafe(()=>tg.expand());
+  tgSafe(()=>tg.setHeaderColor('#00C9B1'));
+}
 
 // ── STATE ──
 let D = {role:null,fullName:'',pointCode:'',som:0,usd:0,karta:0,stats:{},transactions:[],pending:[],myExpenses:[],users:[],points:[]};
@@ -298,45 +305,85 @@ function nw(){ const d=new Date(); return d.toLocaleDateString('ru-RU',{day:'2-d
 
 // ── MA'LUMOT YUKLASH ──
 // Asosiy usul: URL parametrdan (?d=...) olingan JSON
-function loadData(){
+function rawPayload(){
   try{
-    const params = new URLSearchParams(window.location.search);
-    const raw = params.get('d');
-    if(raw){
-      const data = JSON.parse(decodeURIComponent(raw));
+    const q = new URLSearchParams(window.location.search).get('d');
+    if(q) return q;
+    // Telegram hash qo'shadi (#tgWebAppData=...) — bot ma'lumotni hash ga qo'ygan bo'lsa ham o'qiymiz
+    const h = window.location.hash.replace(/^#/, '');
+    if(h){
+      const hp = new URLSearchParams(h).get('d');
+      if(hp) return hp;
+    }
+  }catch(e){ console.error('URL o\'qish xatosi:', e); }
+  return null;
+}
+
+// Bot payload ni har xil kodlashi mumkin: oddiy urlencode, ikki marta urlencode yoki base64.
+// URLSearchParams bir marta dekod qiladi, shuning uchun barcha variantni ketma-ket sinaymiz.
+function parsePayload(raw){
+  const tries = [raw];
+  try{ tries.push(decodeURIComponent(raw)); }catch(e){}
+  if(!/^\s*[{[]/.test(raw)){
+    try{
+      const bin = atob(raw.replace(/-/g,'+').replace(/_/g,'/'));
+      tries.push(new TextDecoder('utf-8').decode(Uint8Array.from(bin, c=>c.charCodeAt(0))));
+    }catch(e){}
+  }
+  for(const t of tries){
+    try{ const o = JSON.parse(t); if(o && typeof o === 'object') return o; }catch(e){}
+  }
+  return null;
+}
+
+function loadData(){
+  let fail = '';
+  const raw = rawPayload();
+  if(raw){
+    const data = parsePayload(raw);
+    if(data && !data.error){
       applyData(data);
       // localStorage ga saqlash (keyingi marta tez yuklash uchun)
       try{ localStorage.setItem('tf_cache', JSON.stringify(data)); }catch(e){}
       return;
     }
-  }catch(e){ console.error('URL parse error:', e); }
+    fail = (data && data.error) ? String(data.error) : "Ma'lumotni o'qib bo'lmadi";
+    console.error('Payload xato:', fail, raw.slice(0,150));
+  }
 
-  // URL da yo'q — localStorage ni tekshir
+  // URL da ishlaydigan ma'lumot yo'q — oxirgi saqlangan nusxani ko'rsatamiz
   try{
     const cached = localStorage.getItem('tf_cache');
     if(cached){
       const data = JSON.parse(cached);
-      applyData(data);
-      return;
+      if(data && typeof data === 'object' && !data.error){
+        applyData(data);
+        toast(fail ? fail + ' — eski ma\'lumot' : "Eski ma'lumot ko'rsatilmoqda", 'info');
+        return;
+      }
     }
   }catch(e){}
 
-  // Hech narsa yo'q — yuklanmadi
+  // Hech narsa yo'q — sababini ekranda ko'rsatamiz
+  showEmpty(fail);
+}
+
+function applyData(data){
+  Object.assign(D, data);
   document.getElementById('loader').style.display = 'none';
-  document.getElementById('role-badge').textContent = 'Kirish kerak';
-  document.getElementById('user-name').textContent = "Botda '💼 Hamyon' tugmasini bosing";
+  setupUI(); renderAll();
+}
+
+function showEmpty(reason){
   D.role='admin'; D.fullName=''; D.som=0; D.usd=0; D.karta=0;
   D.stats={kirim_som:0,kirim_usd:0,kirim_karta:0,chiqim_som:0,chiqim_usd:0,chiqim_karta:0};
   D.transactions=[]; D.pending=[]; D.myExpenses=[];
   D.points=[]; D.users=[];
-  setupUI(); showPage('gazna');
-}
-
-function applyData(data){
-  if(!data || data.error){ loadData(); return; }
-  Object.assign(D, data);
   document.getElementById('loader').style.display = 'none';
-  setupUI(); renderAll();
+  setupUI(); showPage('gazna');
+  // setupUI badge/ism ni D dan qayta yozadi — shuning uchun xabarni undan KEYIN qo'yamiz
+  document.getElementById('role-badge').textContent = 'Kirish kerak';
+  document.getElementById('user-name').textContent = reason || "Botda '💼 Hamyon' tugmasini bosing";
 }
 
 // ── UI SETUP ──
@@ -472,10 +519,21 @@ function calcR(){
 
 // Botga amal yuborish (web_app_data)
 function sendAction(data){
-  if(tg?.sendData){ tg.sendData(JSON.stringify(data)); }
-  else { toast('Bot bilan bog\'liq emas','info'); }
+  if(!tg || typeof tg.sendData !== 'function'){ toast('Bot bilan bog\'liq emas','info'); return false; }
+  const payload = JSON.stringify(data);
+  // Telegram cheklovi: web_app_data 4096 baytdan oshmasligi kerak
+  if(payload.length > 4096){ toast("Ma'lumot juda katta",'err'); return false; }
+  try{
+    tg.sendData(payload);
+  }catch(e){
+    // sendData faqat botdagi ODDIY KLAVIATURA tugmasidan ochilgan ilovada ishlaydi
+    console.error('sendData:', e);
+    toast("Yuborilmadi — ilovani botdagi '💼 Hamyon' tugmasidan oching",'err');
+    return false;
+  }
   // Local state yangilash
   try{ localStorage.removeItem('tf_cache'); }catch(e){}
+  return true;
 }
 
 // ── CHIQIM ──
