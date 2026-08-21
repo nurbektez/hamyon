@@ -24,10 +24,13 @@ uni **GitHub Pages** da bepul va doimiy HTTPS manzilda saqlash mumkin.
 
 ## Doimiy yechim — GitHub Pages
 
-### 1. Pages ni yoqing (bir marta)
+### 1. Pages — avtomatik yoqiladi
 
-GitHub'da: `Settings` → `Pages` → **Source: Deploy from a branch** →
-**Branch: `main`**, **Folder: `/ (root)`** → `Save`.
+`.github/workflows/pages.yml` `main` ga push bo'lganda Pages ni o'zi yoqib, `index.html` ni
+chiqaradi (pastdagi "Pages avtomatik chiqarish" bo'limiga qarang). Qo'lda qilish kerak emas.
+
+> Agar Actions o'chirilgan bo'lsa, qo'lda: `Settings` → `Pages` →
+> **Source: Deploy from a branch** → **Branch: `main`**, **Folder: `/ (root)`** → `Save`.
 
 1–2 daqiqadan keyin manzil tayyor bo'ladi:
 
@@ -86,9 +89,31 @@ Tunnel to'g'ri ishlaganda ham ilovani "ishlamayapti" qilib ko'rsatgan xatolar:
 |------|---------|--------|
 | `tg.setHeaderColor()` eski klientlarda exception tashlaydi | Butun skript to'xtaydi — ilova **bo'm-bo'sh** ochiladi | Tuzatildi (`try/catch`) |
 | `decodeURIComponent()` ikkinchi marta chaqirilardi | Matnda `%` bo'lsa (masalan `50% chegirma`) — `URIError`, ma'lumot yo'qoladi | Tuzatildi (3 xil kodlash sinaladi) |
-| `data.error` kelganda `applyData` → `loadData` → `applyData` | **Cheksiz rekursiya** — ilova muzlab qoladi, spinner aylanaveradi | Tuzatildi |
+| `data.error` kelganda `applyData` → `loadData` → `applyData` | Cheksiz rekursiya → `RangeError`; xato `try/catch` da yutilardi, bot yuborgan sabab ko'rinmas edi | Tuzatildi |
 | "Kirish kerak" xabari `setupUI()` dan oldin yozilardi | Xabar darhol qayta yozilib ketardi — sabab ko'rinmasdi | Tuzatildi |
 | `tg.sendData()` xatosi ushlanmasdi | Amal botga bormaydi, foydalanuvchi buni bilmaydi | Tuzatildi (toast + 4096 bayt tekshiruvi) |
+
+## Pages avtomatik chiqarish
+
+`.github/workflows/pages.yml` qo'shildi: `main` ga har push bo'lganda `index.html` Pages ga
+chiqariladi. Workflow `actions/configure-pages` ni `enablement: true` bilan chaqiradi —
+Pages sozlanmagan bo'lsa, o'zi yoqadi. Ya'ni yuqoridagi 1-qadamni qo'lda bajarish shart emas:
+PR `main` ga qo'shilishi bilan manzil ishlay boshlaydi.
+
+Chiqqanini tekshirish: repo → `Actions` → "Deploy Mini App to Pages" → yashil bo'lsa tayyor.
+
+## Brauzerda tekshirilgan natijalar
+
+Headless Chromium (390x844) da `index.html` haqiqiy ma'lumot bilan yuklab ko'rildi:
+
+| Holat | Eski kod | Yangi kod |
+|-------|----------|-----------|
+| oddiy urlencode | ishlaydi | ✅ balans va 4 ta amal ko'rinadi |
+| ikki marta urlencode | ishlaydi | ✅ |
+| `base64url` | o'qimaydi | ✅ |
+| izohda `%` bor (`Arenda — 50% oldindan`) | ❌ balans **0**, ma'lumot yo'qoladi | ✅ balans 14 750 000 so'm |
+| `{"error": "..."}` | ❌ sababi ko'rinmaydi, bo'sh ekran | ✅ ekranda "Foydalanuvchi topilmadi" |
+| parametrsiz ochilsa | ❌ hech qanday izoh yo'q | ✅ "Botda '💼 Hamyon' tugmasini bosing" |
 
 ## Agar tunnel baribir kerak bo'lsa
 
