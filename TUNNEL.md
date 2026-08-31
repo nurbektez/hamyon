@@ -1,5 +1,9 @@
 # Telegram tuneli ishlamayapti — sabab va doimiy yechim
 
+> Bot Telegramda umuman javob bermayotgan bo'lsa, muammo tunnelda emas —
+> [BOT.md](BOT.md) ga qarang: bot kompyuteringizda ishlaydi va ishga tushirilgan
+> bo'lishi kerak.
+
 ## Qisqacha
 
 Mini App `WEBAPP_URL` orqali ochiladi, u esa bepul **cloudflared (`trycloudflare.com`)**
