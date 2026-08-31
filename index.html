@@ -128,7 +128,7 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 .nit-ico{font-size:21px;line-height:1}.nit-lbl{font-size:10px;color:var(--text3);font-weight:800}
 .nit.on .nit-lbl{color:var(--teal)}
 /* TOAST */
-.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);color:#fff;border-radius:24px;padding:9px 20px;font-size:13px;font-weight:800;opacity:0;transition:all .3s;z-index:400;white-space:nowrap;pointer-events:none;font-family:'Nunito',sans-serif}
+.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);color:#fff;border-radius:18px;padding:10px 18px;font-size:13px;font-weight:800;opacity:0;transition:all .3s;z-index:400;max-width:calc(100vw - 32px);white-space:normal;text-align:center;line-height:1.35;pointer-events:none;font-family:'Nunito',sans-serif}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--green)}.toast.err{background:var(--red)}.toast.info{background:var(--teal2)}
 /* LOADER */
@@ -138,6 +138,7 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 .loader-txt{font-size:14px;font-weight:700;color:var(--text2)}
 .diag{display:none;margin:12px 14px;padding:14px;border-radius:14px;background:#fff;border:1px solid var(--border)}
 .diag.on{display:block}
+body.diag-on .page,body.diag-on .bnav{display:none}
 .diag-h{font-size:14px;font-weight:800;margin-bottom:10px}
 .diag-it{display:flex;gap:8px;font-size:12.5px;line-height:1.5;color:var(--text2);padding:7px 0;border-top:1px solid var(--border)}
 .diag-it:first-of-type{border-top:0}
@@ -405,6 +406,7 @@ function loadData(){
 function applyData(data){
   Object.assign(D, data);
   document.getElementById('diag').classList.remove('on');
+  document.body.classList.remove('diag-on');
   document.getElementById('loader').style.display = 'none';
   setupUI(); renderAll();
 }
@@ -450,6 +452,7 @@ function showEmpty(reason){
   document.getElementById('diag-list').innerHTML =
     diagRows(reason).map(r=>`<div class="diag-it"><span class="diag-ico">${r[0]}</span><span>${r[1]}</span></div>`).join('');
   box.classList.add('on');
+  document.body.classList.add('diag-on');
   // setupUI badge/ism ni D dan qayta yozadi — shuning uchun xabarni undan KEYIN qo'yamiz
   document.getElementById('role-badge').textContent = 'Kirish kerak';
   document.getElementById('user-name').textContent = reason || "Ma'lumot kelmadi";

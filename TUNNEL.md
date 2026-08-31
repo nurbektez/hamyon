@@ -120,6 +120,8 @@ shart emas — ilovaning o'zi shuni yozib beradi.
 | `sendAction()` xato qaytarganda ham balans/ro'yxat yangilanardi va "✅" toast chiqardi | Amal **botga bormaydi**, lekin ilovada bo'lgandek ko'rinadi — eng chalg'ituvchi holat | Har bir amal (`chiqim`, `konvert`, `rasxod`, `foydalanuvchi qo'shish`, `tasdiqlash`, `rad etish`, `o'chirish`) endi yuborish muvaffaqiyatli bo'lgandagina holatni yangilaydi |
 | Rad etish sababi `prompt()` bilan so'ralardi, o'chirish `confirm()` bilan | Telegram WebView bu dialoglarni bloklaydi — tugma bosiladi, **hech narsa bo'lmaydi** | Rad etish uchun oddiy modal qo'shildi; o'chirishda `tg.showConfirm()` (eski klientlarda `confirm()` ga qaytadi) |
 | Izoh/ism `innerHTML` ga qochirilmasdan qo'yilardi | Izohda `<` bo'lsa (masalan `narx < 100`) razmetka buziladi, ro'yxat umuman chiqmaydi | Barcha matnlar `esc()` dan o'tkaziladi |
+| `.toast` da `white-space:nowrap`, kenglik cheklovi yo'q | Uzun xabar (aynan "Yuborilmadi — ... tugmasidan oching") ekrandan chiqib, **o'qib bo'lmasdi** | `max-width` va qatorga bo'linish qo'shildi |
+| Diagnostika ustida `0 so'm` balans va ishlamaydigan Chiqim/Konvert tugmalari turardi | Foydalanuvchi pul yo'qolgan deb o'ylashi mumkin | Diagnostika ochiq bo'lganda sahifa mazmuni va pastki menyu yashiriladi |
 
 Headless Chromium (390x844) da 19 ta tekshiruv o'tkazildi: oddiy payload, izohda `<`
 va HTML teg, payloadsiz ochilish, `trycloudflare.com` xosti, `sendData` xato
