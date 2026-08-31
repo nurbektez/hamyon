@@ -93,6 +93,38 @@ Tunnel to'g'ri ishlaganda ham ilovani "ishlamayapti" qilib ko'rsatgan xatolar:
 | "Kirish kerak" xabari `setupUI()` dan oldin yozilardi | Xabar darhol qayta yozilib ketardi — sabab ko'rinmasdi | Tuzatildi |
 | `tg.sendData()` xatosi ushlanmasdi | Amal botga bormaydi, foydalanuvchi buni bilmaydi | Tuzatildi (toast + 4096 bayt tekshiruvi) |
 
+## Ilova endi sababni o'zi aytadi
+
+Ilgari ma'lumot kelmasa ekranda faqat "Kirish kerak" yozilardi — nima buzilgani
+noma'lum qolardi. Endi ilova ochilganda o'zini tekshiradi va aniq sababni ro'yxat
+qilib chiqaradi:
+
+| Aniqlangan holat | Ekranda |
+|------------------|---------|
+| manzil `*.trycloudflare.com` / `*.ngrok*` / `localhost.run` va h.k. | "Vaqtinchalik tunnel manzilidan ochildi" + `.env` da `WEBAPP_URL` ni Pages manziliga almashtirish ko'rsatmasi |
+| Telegramdan tashqarida (oddiy brauzer) ochilgan | "Ilova faqat Telegram ichida ishlaydi" |
+| `tg.initData` bo'sh — haqiqiy tugmadan emas, havoladan ochilgan | "Telegram initData yubormadi" |
+| manzilda `?d=` yo'q | "Bot ma'lumot qo'shmagan" |
+| bot `{"error": "..."}` yuborgan | botning o'z sababi |
+
+Har holatda oxirgi qator bir xil: ilovani botdagi **oddiy klaviatura** tugmasi
+(`💼 Hamyon`) orqali ochish kerak.
+
+Ya'ni `WEBAPP_URL` hali ham eski tunnelga qarab tursa, buni endi taxmin qilish
+shart emas — ilovaning o'zi shuni yozib beradi.
+
+## Yana uchta jimgina xato tuzatildi
+
+| Xato | Oqibati | Yechim |
+|------|---------|--------|
+| `sendAction()` xato qaytarganda ham balans/ro'yxat yangilanardi va "✅" toast chiqardi | Amal **botga bormaydi**, lekin ilovada bo'lgandek ko'rinadi — eng chalg'ituvchi holat | Har bir amal (`chiqim`, `konvert`, `rasxod`, `foydalanuvchi qo'shish`, `tasdiqlash`, `rad etish`, `o'chirish`) endi yuborish muvaffaqiyatli bo'lgandagina holatni yangilaydi |
+| Rad etish sababi `prompt()` bilan so'ralardi, o'chirish `confirm()` bilan | Telegram WebView bu dialoglarni bloklaydi — tugma bosiladi, **hech narsa bo'lmaydi** | Rad etish uchun oddiy modal qo'shildi; o'chirishda `tg.showConfirm()` (eski klientlarda `confirm()` ga qaytadi) |
+| Izoh/ism `innerHTML` ga qochirilmasdan qo'yilardi | Izohda `<` bo'lsa (masalan `narx < 100`) razmetka buziladi, ro'yxat umuman chiqmaydi | Barcha matnlar `esc()` dan o'tkaziladi |
+
+Headless Chromium (390x844) da 19 ta tekshiruv o'tkazildi: oddiy payload, izohda `<`
+va HTML teg, payloadsiz ochilish, `trycloudflare.com` xosti, `sendData` xato
+bergan holat va muvaffaqiyatli holat, rad etish modali — barchasi o'tdi.
+
 ## Pages avtomatik chiqarish
 
 `.github/workflows/pages.yml` qo'shildi: `main` ga har push bo'lganda `index.html` Pages ga

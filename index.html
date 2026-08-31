@@ -136,6 +136,13 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 .loader-spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-txt{font-size:14px;font-weight:700;color:var(--text2)}
+.diag{display:none;margin:12px 14px;padding:14px;border-radius:14px;background:#fff;border:1px solid var(--border)}
+.diag.on{display:block}
+.diag-h{font-size:14px;font-weight:800;margin-bottom:10px}
+.diag-it{display:flex;gap:8px;font-size:12.5px;line-height:1.5;color:var(--text2);padding:7px 0;border-top:1px solid var(--border)}
+.diag-it:first-of-type{border-top:0}
+.diag-it b{color:var(--text1)}
+.diag-ico{flex:0 0 auto}
 .page{display:none}.page.active{display:block}
 .pg-title{font-size:18px;font-weight:900;color:var(--text);padding:16px 16px 10px}
 </style>
@@ -153,6 +160,11 @@ input.sm,select.sm{font-size:15px;font-weight:700}
     <div class="hdr-badge" id="role-badge">...</div>
   </div>
   <div class="hdr-name" id="user-name"></div>
+</div>
+
+<div class="diag" id="diag">
+  <div class="diag-h">⚠️ Ilova ma'lumot olmadi</div>
+  <div id="diag-list"></div>
 </div>
 
 <!-- GAZNA -->
@@ -279,6 +291,13 @@ input.sm,select.sm{font-size:15px;font-weight:700}
   </div>
 </div>
 
+<div class="overlay" id="reject-modal">
+  <div class="sheet"><div class="handle"></div><div class="sheet-title">❌ Rad etish</div>
+    <div class="f-grp"><div class="f-lbl">Sabab</div><input type="text" class="sm" id="rej-note" placeholder="Masalan: chek biriktirilmagan"></div>
+    <button class="sbtn" onclick="confirmReject()">✓ Rad etish</button>
+  </div>
+</div>
+
 <div class="bnav" id="bnav"></div>
 <div class="toast" id="toast"></div>
 
@@ -296,6 +315,21 @@ if(tg){
 // ── STATE ──
 let D = {role:null,fullName:'',pointCode:'',som:0,usd:0,karta:0,stats:{},transactions:[],pending:[],myExpenses:[],users:[],points:[]};
 let UI = {page:'gazna',chiqimAcc:'som',konvDir:'s2u',expCat:'arenda',expCur:'som',selRole:'director'};
+
+// ── HTML QOCHIRISH ──
+// Izoh/ism kabi matnlar innerHTML ga qo'yiladi. Ichida '<' bo'lsa (masalan "narx < 100")
+// razmetka buziladi va ro'yxat umuman chiqmaydi.
+const ESC = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c=>ESC[c]); }
+
+// Telegram WebView da window.confirm() ko'pincha bloklanadi — tugma jimgina ishlamaydi.
+// Telegram o'zining showConfirm ini beradi (Bot API 6.2+), eskilarida fallback.
+function askConfirm(msg, cb){
+  if(tg && typeof tg.showConfirm === 'function'){
+    try{ tg.showConfirm(msg, ok=>cb(!!ok)); return; }catch(e){ console.warn('showConfirm:', e); }
+  }
+  cb(window.confirm(msg));
+}
 
 // ── FORMAT ──
 function fS(n){ n=n||0; return Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ') + " so'm"; }
@@ -370,20 +404,55 @@ function loadData(){
 
 function applyData(data){
   Object.assign(D, data);
+  document.getElementById('diag').classList.remove('on');
   document.getElementById('loader').style.display = 'none';
   setupUI(); renderAll();
 }
 
+// Vaqtinchalik tunnel domenlari — bu manzillar har qayta ishga tushganda o'zgaradi.
+const TUNNEL_HOST = /(^|\.)(trycloudflare\.com|localhost\.run|lhr\.life|loca\.lt|serveo\.net|ngrok(-free)?\.(app|io|dev))$/i;
+const PAGES_URL = 'https://nurbektez.github.io/hamyon/';
+
+// Nega ma'lumot yo'q — taxmin qilmasdan, aniq sababni ekranga chiqaramiz.
+function diagRows(reason){
+  const rows = [];
+  const host = location.hostname;
+
+  if(TUNNEL_HOST.test(host)){
+    rows.push(['🚧', "Ilova <b>vaqtinchalik tunnel</b> manzilidan ochildi: <b>"+esc(host)+"</b>. Bu manzil bot yoki kompyuter qayta ishga tushganda o'zgaradi — eski tugma 502 qaytaradi."]);
+    rows.push(['🛠️', "Botdagi <b>.env</b> da <b>WEBAPP_URL="+esc(PAGES_URL)+"</b> qilib qo'ying va botni qayta ishga tushiring. Bu manzil o'zgarmaydi, tunnel kerak emas."]);
+  }
+
+  if(!tg){
+    rows.push(['🌐', "Sahifa <b>Telegramdan tashqarida</b> ochilgan (oddiy brauzer). Ilova faqat Telegram ichida ishlaydi."]);
+  } else if(!tg.initData){
+    rows.push(['🔗', "Telegram <b>initData</b> yubormadi — ilova haqiqiy tugmadan emas, oddiy havoladan ochilgan ko'rinadi."]);
+  }
+
+  if(reason){
+    rows.push(['❗', "Bot javobi: <b>"+esc(reason)+"</b>"]);
+  } else if(!rawPayload()){
+    rows.push(['📭', "Manzilda <b>?d=</b> parametri yo'q — bot ma'lumot qo'shmagan."]);
+  }
+
+  rows.push(['💼', "Ilovani botdagi <b>oddiy klaviatura</b> tugmasi — <b>'💼 Hamyon'</b> — orqali oching. Inline tugma yoki menyu tugmasidan ochilsa, amallar botga bormaydi."]);
+  return rows;
+}
+
 function showEmpty(reason){
-  D.role='admin'; D.fullName=''; D.som=0; D.usd=0; D.karta=0;
+  D.role=null; D.fullName=''; D.som=0; D.usd=0; D.karta=0;
   D.stats={kirim_som:0,kirim_usd:0,kirim_karta:0,chiqim_som:0,chiqim_usd:0,chiqim_karta:0};
   D.transactions=[]; D.pending=[]; D.myExpenses=[];
   D.points=[]; D.users=[];
   document.getElementById('loader').style.display = 'none';
   setupUI(); showPage('gazna');
+  const box = document.getElementById('diag');
+  document.getElementById('diag-list').innerHTML =
+    diagRows(reason).map(r=>`<div class="diag-it"><span class="diag-ico">${r[0]}</span><span>${r[1]}</span></div>`).join('');
+  box.classList.add('on');
   // setupUI badge/ism ni D dan qayta yozadi — shuning uchun xabarni undan KEYIN qo'yamiz
   document.getElementById('role-badge').textContent = 'Kirish kerak';
-  document.getElementById('user-name').textContent = reason || "Botda '💼 Hamyon' tugmasini bosing";
+  document.getElementById('user-name').textContent = reason || "Ma'lumot kelmadi";
 }
 
 // ── UI SETUP ──
@@ -393,7 +462,7 @@ function setupUI(){
   document.getElementById('user-name').textContent = D.fullName||'';
   // Punkt select
   const sel = document.getElementById('nu-point');
-  sel.innerHTML = (D.points||[]).filter(p=>p.active).map(p=>`<option value="${p.code}">${p.code} — ${p.name}</option>`).join('');
+  sel.innerHTML = (D.points||[]).filter(p=>p.active).map(p=>`<option value="${esc(p.code)}">${esc(p.code)} — ${esc(p.name)}</option>`).join('');
   buildNav();
   showPage(D.role==='point_worker'?'worker':'gazna');
 }
@@ -447,10 +516,10 @@ function renderTxList(elId,list){
   const icons={kirim:'➕',chiqim:'➖',konvert:'💱'};
   el.innerHTML=list.map(t=>{
     let amt='',cls='s',title='',sub='';
-    if(t.type==='kirim'){ amt='+'+fA(t.acc||t.accFrom,t.amount); cls='p'; title=t.pointCode||'Kirim'; sub=t.acc==='usd'?'Dollar':t.acc==='karta'?'Karta':"So'm"; }
-    else if(t.type==='chiqim'){ amt='-'+fA(t.acc||t.accFrom,t.amount); cls='m'; title=t.comment||'Chiqim'; sub=t.acc==='usd'?'Dollar':t.acc==='karta'?'Karta':"So'm"; }
-    else if(t.type==='konvert'){ amt=fA(t.accFrom,t.amount)+'→'+fA(t.accTo,t.amountTo||0); cls='s'; title='Konvert'; sub=(t.accFrom||'')+'→'+(t.accTo||''); }
-    const time=(t.date||'').split(' ')[1]||'';
+    if(t.type==='kirim'){ amt='+'+fA(t.acc||t.accFrom,t.amount); cls='p'; title=esc(t.pointCode||'Kirim'); sub=t.acc==='usd'?'Dollar':t.acc==='karta'?'Karta':"So'm"; }
+    else if(t.type==='chiqim'){ amt='-'+fA(t.acc||t.accFrom,t.amount); cls='m'; title=esc(t.comment||'Chiqim'); sub=t.acc==='usd'?'Dollar':t.acc==='karta'?'Karta':"So'm"; }
+    else if(t.type==='konvert'){ amt=fA(t.accFrom,t.amount)+'→'+fA(t.accTo,t.amountTo||0); cls='s'; title='Konvert'; sub=esc((t.accFrom||'')+'→'+(t.accTo||'')); }
+    const time=esc((t.date||'').split(' ')[1]||'');
     return `<div class="tx"><div class="tx-ico ${t.type}">${icons[t.type]||'•'}</div><div class="tx-info"><div class="tx-title">${title}</div><div class="tx-sub">${sub}</div></div><div class="tx-right"><div class="tx-amt ${cls}">${amt}</div><div class="tx-time">${time}</div></div></div>`;
   }).join('');
 }
@@ -462,8 +531,8 @@ function renderPending(){
   const cats={arenda:'🏢 Arenda',oylik:'👷 Oylik',yolkira:"🚗 Yo'lkira",boshqa:'📦 Boshqa'};
   el.innerHTML=list.map(e=>`
     <div class="pend-card">
-      <div class="pend-top"><div><div class="pend-title">${cats[e.category]||e.category}</div><div class="pend-meta">🏪 ${e.pointCode} • 👤 ${e.workerName}</div><div class="pend-meta">📝 ${e.comment}</div></div><div class="pend-amt">${fA(e.currency,e.amount)}</div></div>
-      <div style="font-size:11px;color:var(--text3)">${e.date||''}</div>
+      <div class="pend-top"><div><div class="pend-title">${cats[e.category]||esc(e.category)}</div><div class="pend-meta">🏪 ${esc(e.pointCode)} • 👤 ${esc(e.workerName)}</div><div class="pend-meta">📝 ${esc(e.comment)}</div></div><div class="pend-amt">${fA(e.currency,e.amount)}</div></div>
+      <div style="font-size:11px;color:var(--text3)">${esc(e.date||'')}</div>
       <div class="pend-btns"><button class="pend-btn ok" onclick="appExp(${e.id})">✅ Tasdiqlash</button><button class="pend-btn no" onclick="rejExp(${e.id})">❌ Rad etish</button></div>
     </div>`).join('');
 }
@@ -478,7 +547,7 @@ function renderWorker(){
   el.innerHTML=list.map(e=>`
     <div class="list-item">
       <div class="list-ico">${sico[e.status]||'•'}</div>
-      <div class="list-info"><div class="list-title">${cats[e.category]||e.category} — ${fA(e.currency,e.amount)}</div><div class="list-sub">${e.date||''} ${e.status==='rejected'&&e.rejectNote?'• '+e.rejectNote:''}</div></div>
+      <div class="list-info"><div class="list-title">${cats[e.category]||esc(e.category)} — ${fA(e.currency,e.amount)}</div><div class="list-sub">${esc(e.date||'')} ${e.status==='rejected'&&e.rejectNote?'• '+esc(e.rejectNote):''}</div></div>
     </div>`).join('');
 }
 
@@ -543,7 +612,7 @@ function doChiqim(){
   if(!amt||amt<=0){ toast('Miqdor kiriting!','err'); return; }
   if(!izoh){ toast('Izoh kiriting!','err'); return; }
   if((D[UI.chiqimAcc]||0)<amt){ toast("Mablag' yetarli emas!",'err'); return; }
-  sendAction({action:'chiqim',acc:UI.chiqimAcc,amount:amt,comment:izoh});
+  if(!sendAction({action:'chiqim',acc:UI.chiqimAcc,amount:amt,comment:izoh})) return;
   D[UI.chiqimAcc]-=amt;
   D.transactions.unshift({type:'chiqim',acc:UI.chiqimAcc,amount:amt,comment:izoh,date:nw()});
   D.stats.chiqim_som=(D.stats.chiqim_som||0)+(UI.chiqimAcc==='som'?amt:0);
@@ -561,7 +630,7 @@ function doKonvert(){
   const at=UI.konvDir==='s2u'?'usd':'som';
   if((D[af]||0)<f){ toast("Mablag' yetarli emas!",'err'); return; }
   const rate=UI.konvDir==='s2u'?Math.round(f/t):Math.round(t/f);
-  sendAction({action:'konvert',acc_from:af,acc_to:at,amount_from:f,amount_to:t,rate});
+  if(!sendAction({action:'konvert',acc_from:af,acc_to:at,amount_from:f,amount_to:t,rate})) return;
   D[af]-=f; D[at]+=t;
   D.transactions.unshift({type:'konvert',accFrom:af,accTo:at,amount:f,amountTo:t,date:nw()});
   renderGazna(); document.getElementById('k-from').value=''; document.getElementById('k-to').value='';
@@ -574,7 +643,7 @@ function doExpense(){
   const izoh=document.getElementById('exp-izoh').value.trim();
   if(!amt||amt<=0){ toast('Miqdor kiriting!','err'); return; }
   if(!izoh){ toast('Izoh kiriting!','err'); return; }
-  sendAction({action:'add_expense',category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh});
+  if(!sendAction({action:'add_expense',category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh})) return;
   D.myExpenses.unshift({id:Date.now(),category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh,status:'pending',date:nw()});
   document.getElementById('exp-amt').value=''; document.getElementById('exp-izoh').value='';
   closeAll(); renderWorker(); toast('Director ga yuborildi!','info');
@@ -588,7 +657,7 @@ function doAddUser(){
   const pt=role==='point_worker'?document.getElementById('nu-point').value:'';
   if(!tid||isNaN(parseInt(tid))){ toast('Telegram ID kiriting!','err'); return; }
   if(!name){ toast('Ism kiriting!','err'); return; }
-  sendAction({action:'add_user',telegram_id:parseInt(tid),full_name:name,role,point_code:pt||null});
+  if(!sendAction({action:'add_user',telegram_id:parseInt(tid),full_name:name,role,point_code:pt||null})) return;
   D.users.push({id:parseInt(tid),name,role,point:pt,active:1});
   document.getElementById('nu-id').value=''; document.getElementById('nu-name').value='';
   closeAll(); toast('✅ Qo\'shildi!','ok'); showSub('users');
@@ -596,22 +665,34 @@ function doAddUser(){
 
 // ── APPROVE/REJECT ──
 function appExp(id){
-  sendAction({action:'approve_expense',exp_id:id});
-  const e=D.pending.find(x=>x.id===id); if(e) e.status='approved';
+  if(!sendAction({action:'approve_expense',exp_id:id})) return;
+  const e=(D.pending||[]).find(x=>x.id===id); if(e) e.status='approved';
   renderPending(); toast('✅ Tasdiqlandi!','ok');
 }
+
+// prompt() Telegram WebView da bloklanadi — sabab so'ramasdan tugma jimgina ishlamas edi.
+// Shuning uchun sabab oddiy modal orqali olinadi.
+let rejId=null;
 function rejExp(id){
-  const note=prompt("Rad etish sababi:");
-  if(!note) return;
-  sendAction({action:'reject_expense',exp_id:id,note});
-  const e=D.pending.find(x=>x.id===id); if(e){ e.status='rejected'; e.rejectNote=note; }
-  renderPending(); toast('❌ Rad etildi','err');
+  rejId=id;
+  document.getElementById('rej-note').value='';
+  openM('reject-modal');
 }
+function confirmReject(){
+  const note=document.getElementById('rej-note').value.trim();
+  if(!note){ toast('Sabab kiriting!','err'); return; }
+  if(!sendAction({action:'reject_expense',exp_id:rejId,note})) return;
+  const e=(D.pending||[]).find(x=>x.id===rejId); if(e){ e.status='rejected'; e.rejectNote=note; }
+  closeAll(); renderPending(); toast('❌ Rad etildi','err');
+}
+
 function delUser(tid){
-  if(!confirm("O'chirilsinmi?")) return;
-  sendAction({action:'del_user',telegram_id:tid});
-  D.users=D.users.filter(u=>u.id!==tid);
-  showSub('users'); toast("O'chirildi",'err');
+  askConfirm("O'chirilsinmi?", ok=>{
+    if(!ok) return;
+    if(!sendAction({action:'del_user',telegram_id:tid})) return;
+    D.users=D.users.filter(u=>u.id!==tid);
+    showSub('users'); toast("O'chirildi",'err');
+  });
 }
 
 // ── ADMIN SUBPAGES ──
@@ -624,8 +705,8 @@ function showSub(name){
     const rows=(D.users||[]).map(u=>`
       <div class="list-item">
         <div class="list-ico">${icons[u.role]||'👤'}</div>
-        <div class="list-info"><div class="list-title">${u.name}</div><div class="list-sub">ID: ${u.id}${u.point?' • '+u.point:''}</div></div>
-        <span class="badge ${u.role}">${u.role}</span>
+        <div class="list-info"><div class="list-title">${esc(u.name)}</div><div class="list-sub">ID: ${esc(u.id)}${u.point?' • '+esc(u.point):''}</div></div>
+        <span class="badge ${esc(u.role)}">${esc(u.role)}</span>
         <button class="del-btn" onclick="delUser(${u.id})">❌</button>
       </div>`).join('');
     el.innerHTML=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">👥 Foydalanuvchilar (${(D.users||[]).length} ta)</div>${rows||'<div class="empty">Hali yo\'q</div>'}`;
@@ -633,7 +714,7 @@ function showSub(name){
     const rows=(D.points||[]).map(p=>`
       <div class="list-item">
         <div class="list-ico">🏪</div>
-        <div class="list-info"><div class="list-title">${p.code}</div><div class="list-sub">${p.name}</div></div>
+        <div class="list-info"><div class="list-title">${esc(p.code)}</div><div class="list-sub">${esc(p.name)}</div></div>
         <span class="badge ${p.active?'cashier':'admin'}">${p.active?'Faol':'Noaktiv'}</span>
       </div>`).join('');
     el.innerHTML=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">🏪 Punktlar (${(D.points||[]).length} ta)</div>${rows}`;
@@ -642,7 +723,7 @@ function showSub(name){
     const rows=all.map(e=>`
       <div class="list-item">
         <div class="list-ico">${sico[e.status]||'•'}</div>
-        <div class="list-info"><div class="list-title">${cats[e.category]||e.category} — ${fA(e.currency,e.amount)}</div><div class="list-sub">🏪 ${e.pointCode} • ${e.date||''}</div></div>
+        <div class="list-info"><div class="list-title">${cats[e.category]||esc(e.category)} — ${fA(e.currency,e.amount)}</div><div class="list-sub">🏪 ${esc(e.pointCode)} • ${esc(e.date||'')}</div></div>
       </div>`).join('');
     el.innerHTML=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">📊 Barcha rasxodlar</div>${rows||'<div class="empty">Hali yo\'q</div>'}`;
   }
