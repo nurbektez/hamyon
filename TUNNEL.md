@@ -115,6 +115,23 @@ Headless Chromium (390x844) da `index.html` haqiqiy ma'lumot bilan yuklab ko'ril
 | `{"error": "..."}` | ❌ sababi ko'rinmaydi, bo'sh ekran | ✅ ekranda "Foydalanuvchi topilmadi" |
 | parametrsiz ochilsa | ❌ hech qanday izoh yo'q | ✅ "Botda '💼 Hamyon' tugmasini bosing" |
 
+## Mini App ichidagi servis paneli
+
+Bot chati jim qolsa, telefonning o'zidan tekshirish mumkin — ofis kompyuteri shart emas:
+
+**Admin panel → 🔧 Bot servisi**
+
+1. `.env` dagi `BOT_TOKEN` ni bir marta kiritib "Saqlash" bosiladi — token **faqat
+   o'sha telefonda** (`localStorage`) qoladi, repoga ham, boshqa serverga ham
+   yuborilmaydi; faqat `api.telegram.org` ga ketadi.
+2. **Tekshirish** — bot tirikmi (`getMe`) va webhook eski tunnel manzilida
+   qolmaganmi (`getWebhookInfo`) ko'rsatadi.
+3. **Webhookni o'chirish** — `deleteWebhook`; bot polling'ga qaytadi.
+
+Panel bot dasturining o'zini ishga tushira olmaydi: kompyuter o'chiq bo'lsa,
+bot ham o'chiq bo'ladi. Ya'ni panel webhook muammosini yechadi, kompyuter
+muammosini emas.
+
 ## Agar tunnel baribir kerak bo'lsa
 
 Doimiy manzil uchun **nomli (named) Cloudflare tunnel** ishlating — o'z domeningizga
