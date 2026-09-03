@@ -132,6 +132,13 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--green)}.toast.err{background:var(--red)}.toast.info{background:var(--teal2)}
 /* LOADER */
+.svc-warn{background:var(--yellow-bg);border-left:3px solid var(--yellow);border-radius:var(--r3);padding:11px 13px;font-size:12px;font-weight:600;color:var(--text2);line-height:1.5;margin-bottom:14px}
+.svc-card{background:var(--white);border-radius:var(--r2);padding:13px;box-shadow:var(--shadow2);margin-bottom:10px}
+.svc-row{display:flex;gap:8px;margin-bottom:10px}
+.svc-row .sbtn{margin:0}
+.svc-out{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-all;color:var(--text)}
+.svc-ok{color:var(--green);font-weight:800}
+.svc-err{color:var(--red);font-weight:800}
 .loader{position:fixed;inset:0;background:rgba(255,255,255,.95);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .loader-spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -207,8 +214,49 @@ input.sm,select.sm{font-size:15px;font-weight:700}
     <button class="adm-btn" onclick="openM('add-user-modal')"><div class="adm-btn-ico">➕</div><div class="adm-btn-lbl">Qo'shish</div><div class="adm-btn-sub">Yangi foydalanuvchi</div></button>
     <button class="adm-btn" onclick="showSub('points')"><div class="adm-btn-ico">🏪</div><div class="adm-btn-lbl">Punktlar</div><div class="adm-btn-sub">58 ta punkt</div></button>
     <button class="adm-btn" onclick="showSub('all-exp')"><div class="adm-btn-ico">📊</div><div class="adm-btn-lbl">Barcha rasxodlar</div><div class="adm-btn-sub">Punkt rasxodlari</div></button>
+    <button class="adm-btn" onclick="showPage('servis')"><div class="adm-btn-ico">🔧</div><div class="adm-btn-lbl">Bot servisi</div><div class="adm-btn-sub">Chat ishlamasa</div></button>
   </div>
   <div id="sub-area" style="padding:0 16px;display:none"></div>
+</div>
+
+<div class="page" id="page-servis">
+  <div class="pg-title">🔧 Bot servisi</div>
+
+  <div style="padding:0 16px">
+    <div class="svc-warn">
+      Bot chati jim qolsa shu yerdan tekshiring. Token faqat shu telefonda saqlanadi,
+      hech qayerga yuborilmaydi — faqat Telegram serveriga. Boshqa odam bu sahifani ochsa,
+      sizning tokeningizni ko'rmaydi.
+    </div>
+
+    <div class="svc-card">
+      <div class="f-grp" style="margin-bottom:10px">
+        <div class="f-lbl">Bot tokeni (.env dagi BOT_TOKEN)</div>
+        <input type="password" class="sm" id="svc-token" placeholder="123456:AA..." autocomplete="off">
+        <div class="hint" id="svc-token-hint">Saqlanmagan</div>
+      </div>
+      <div class="svc-row">
+        <button class="sbtn" style="flex:1" onclick="svcSave()">💾 Saqlash</button>
+        <button class="sbtn red" style="flex:1" onclick="svcForget()">🗑 O'chirish</button>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <button class="sbtn" style="margin-bottom:8px" onclick="svcCheck()">🔍 Tekshirish</button>
+      <button class="sbtn red" onclick="svcDeleteHook()">🧹 Webhookni o'chirish</button>
+      <div class="hint" style="margin-top:8px">
+        Webhook eski tunnel manzilida qolgan bo'lsa, bot chati jim bo'ladi.
+        O'chirilsa, bot polling'ga qaytadi — tunnel kerak bo'lmaydi.
+      </div>
+    </div>
+
+    <div class="svc-card"><div class="svc-out" id="svc-out">Tekshirish uchun tugmani bosing.</div></div>
+
+    <div class="svc-warn" style="border-left-color:var(--blue);background:var(--blue-bg)">
+      Eslatma: bot dasturining o'zini bu yerdan ishga tushirib bo'lmaydi.
+      Kompyuter o'chiq bo'lsa, bot ham o'chiq bo'ladi.
+    </div>
+  </div>
 </div>
 
 <!-- MODALS -->
@@ -408,7 +456,8 @@ function buildNav(){
     if(D.role==='director'||D.role==='admin') items.push({ico:'⏳',lbl:'Kutayotgan',page:'pending'});
     if(D.role==='admin') items.push({ico:'⚙️',lbl:'Admin',page:'admin'});
   }
-  el.innerHTML=items.map(i=>`<button class="nit ${UI.page===i.page?'on':''}" onclick="showPage('${i.page}')"><div class="nit-ico">${i.ico}</div><div class="nit-lbl">${i.lbl}</div></button>`).join('');
+  const act=p=>UI.page===p||(p==='admin'&&UI.page==='servis');
+  el.innerHTML=items.map(i=>`<button class="nit ${act(i.page)?'on':''}" onclick="showPage('${i.page}')"><div class="nit-ico">${i.ico}</div><div class="nit-lbl">${i.lbl}</div></button>`).join('');
 }
 
 // ── PAGES ──
@@ -421,6 +470,7 @@ function showPage(p){
   if(p==='tarix') renderTarix();
   if(p==='pending') renderPending();
   if(p==='worker') renderWorker();
+  if(p==='servis') svcInit();
 }
 
 // ── RENDER ──
@@ -645,6 +695,121 @@ function showSub(name){
         <div class="list-info"><div class="list-title">${cats[e.category]||e.category} — ${fA(e.currency,e.amount)}</div><div class="list-sub">🏪 ${e.pointCode} • ${e.date||''}</div></div>
       </div>`).join('');
     el.innerHTML=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">📊 Barcha rasxodlar</div>${rows||'<div class="empty">Hali yo\'q</div>'}`;
+  }
+}
+
+// ── BOT SERVISI ──
+// Telegram Bot API ni to'g'ridan-to'g'ri chaqiradi. Token faqat shu qurilmada
+// (localStorage) saqlanadi va faqat api.telegram.org ga yuboriladi.
+const TG_API = 'https://api.telegram.org/bot';
+const TOK_KEY = 'tf_bot_token';
+
+function svcGetSaved(){ try{ return localStorage.getItem(TOK_KEY) || ''; }catch(e){ return ''; } }
+
+function svcMask(t){ return t.length > 6 ? '…' + t.slice(-4) : '…'; }
+
+function svcInit(){
+  const saved = svcGetSaved();
+  const inp = document.getElementById('svc-token');
+  if(saved && !inp.value) inp.value = saved;
+  document.getElementById('svc-token-hint').textContent =
+    saved ? 'Saqlangan: ' + svcMask(saved) : 'Saqlanmagan';
+}
+
+function svcToken(){
+  const t = (document.getElementById('svc-token').value || '').trim() || svcGetSaved();
+  if(!t){ svcOut('Avval tokenni kiriting.', 'err'); return null; }
+  return t;
+}
+
+function svcSave(){
+  const t = (document.getElementById('svc-token').value || '').trim();
+  if(!t){ toast('Token bo\'sh', 'err'); return; }
+  try{ localStorage.setItem(TOK_KEY, t); toast('Saqlandi'); }
+  catch(e){ toast('Saqlab bo\'lmadi', 'err'); }
+  svcInit();
+}
+
+function svcForget(){
+  try{ localStorage.removeItem(TOK_KEY); }catch(e){}
+  document.getElementById('svc-token').value = '';
+  svcInit();
+  svcOut('Token o\'chirildi.');
+  toast('O\'chirildi');
+}
+
+// Chiqishni faqat matn sifatida yozamiz — Telegram qaytargan matn HTML bo'lib ketmasin
+function svcOut(text, kind){
+  const el = document.getElementById('svc-out');
+  el.textContent = '';
+  const span = document.createElement('span');
+  if(kind === 'ok') span.className = 'svc-ok';
+  if(kind === 'err') span.className = 'svc-err';
+  span.textContent = text;
+  el.appendChild(span);
+}
+
+function svcAdd(text, kind){
+  const el = document.getElementById('svc-out');
+  const span = document.createElement('span');
+  if(kind === 'ok') span.className = 'svc-ok';
+  if(kind === 'err') span.className = 'svc-err';
+  span.textContent = text;
+  el.appendChild(span);
+  el.appendChild(document.createTextNode('\n'));
+}
+
+async function tgCall(token, method){
+  const r = await fetch(TG_API + token + '/' + method);
+  return await r.json();
+}
+
+async function svcCheck(){
+  const t = svcToken(); if(!t) return;
+  svcOut('Tekshirilmoqda…');
+  try{
+    const me = await tgCall(t, 'getMe');
+    svcOut('');
+    if(me.ok){ svcAdd('✅ Bot: @' + (me.result.username || '—'), 'ok'); }
+    else { svcAdd('❌ Token xato: ' + (me.description || ''), 'err'); return; }
+
+    const wh = await tgCall(t, 'getWebhookInfo');
+    if(!wh.ok){ svcAdd('⚠️ getWebhookInfo: ' + (wh.description || ''), 'err'); return; }
+
+    const r = wh.result || {};
+    if(!r.url){
+      svcAdd('✅ Webhook yo\'q — bot polling rejimida (to\'g\'ri)', 'ok');
+      svcAdd('Chat baribir jim bo\'lsa: bot dasturi kompyuterda ishlamayotgan bo\'lishi mumkin.');
+    } else {
+      svcAdd('❌ Webhook o\'rnatilgan:', 'err');
+      svcAdd(r.url);
+      svcAdd('Telegram xabarlarni shu manzilga yuboradi. Tunnel o\'lgan bo\'lsa, chat ishlamaydi.');
+      svcAdd('Yechim: pastdagi "Webhookni o\'chirish" tugmasi.');
+    }
+    if(r.pending_update_count) svcAdd('⏳ Yetkazilmagan xabarlar: ' + r.pending_update_count);
+    if(r.last_error_message)   svcAdd('↳ Oxirgi xato: ' + r.last_error_message);
+  }catch(e){
+    svcOut('❌ Telegram serveriga ulanib bo\'lmadi: ' + (e && e.message ? e.message : e), 'err');
+  }
+}
+
+async function svcDeleteHook(){
+  const t = svcToken(); if(!t) return;
+  if(!confirm('Webhook o\'chirilsinmi? Bot polling rejimiga qaytadi.')) return;
+  svcOut('O\'chirilmoqda…');
+  try{
+    const r = await tgCall(t, 'deleteWebhook');
+    svcOut('');
+    if(r.ok){
+      svcAdd('✅ Webhook o\'chirildi', 'ok');
+      svcAdd('Endi bot dasturi kompyuterda qayta ishga tushirilishi kerak.');
+      svcAdd('Agar bot ishga tushganda o\'zi setWebhook qilsa, webhook qaytadi —');
+      svcAdd('u holda bot.py da polling yoqilishi kerak.');
+    } else {
+      svcAdd('❌ ' + (r.description || 'noma\'lum xato'), 'err');
+    }
+  }catch(e){
+    svcOut('❌ Ulanib bo\'lmadi: ' + (e && e.message ? e.message : e), 'err');
   }
 }
 
