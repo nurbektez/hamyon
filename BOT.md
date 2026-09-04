@@ -11,6 +11,22 @@ Shuning uchun Pages ga o'tganimiz botga javob bermaslikni tuzatmaydi. Telegramda
 botga yozganingizda javob kelishi uchun kompyuteringizda `bot.py` **ishlab turishi**
 shart.
 
+## Avval: tekshiruv skripti
+
+Nima buzilganini bilmasangiz, **`scripts/check-bot.bat`** ni ikki marta bosing. U hammasini
+o'zi tekshiradi va yonida `hisobot.txt` faylini yozadi:
+
+- `bot.py`, `.env`, `requirements.txt`, `bot.log` bormi;
+- `.env` da `BOT_TOKEN` bormi, `WEBAPP_URL` hali tunnelga qarab turmaganmi;
+- hozir nechta bot nusxasi ishlayapti (bir nechta bo'lsa — `409 Conflict`, bot jim qoladi);
+- Telegram bilan aloqa: `getMe`, `getWebhookInfo`, kutilayotgan xabarlar soni, oxirgi xato;
+- webhook o'rnatilgan bo'lsa — so'raydi va o'sha yerda tozalaydi;
+- `bot.log` ning oxirgi 25 qatori;
+- oxirida oddiy tilda **XULOSA**: nima buzilgan va nima qilish kerak.
+
+Token `.env` dan o'zi o'qiladi va hisobotda **yashiriladi** — `hisobot.txt` ni bemalol
+yuborsangiz bo'ladi.
+
 ## Ishga tushirish
 
 `scripts/start-bot.bat` va `scripts/start-bot.ps1` ni `bot.py` turgan papkaga
