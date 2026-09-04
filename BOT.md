@@ -11,6 +11,15 @@ Shuning uchun Pages ga o'tganimiz botga javob bermaslikni tuzatmaydi. Telegramda
 botga yozganingizda javob kelishi uchun kompyuteringizda `bot.py` **ishlab turishi**
 shart.
 
+## Yangi bot — `bot/`
+
+Mavjud `bot.py` ni tuzatib bo'lmasa yoki u yo'q bo'lsa, shu repodagi
+[`bot/`](bot/) papkadagi bot tayyor va Mini App bilan to'liq mos ishlaydi.
+Faqat standart kutubxona — `pip install` kerak emas. Sozlash:
+[`bot/README.md`](bot/README.md).
+
+Eski botingizga va uning bazasiga **tegmaydi** — alohida papka, alohida baza.
+
 ## Avval: tekshiruv skripti
 
 Nima buzilganini bilmasangiz, **`scripts/check-bot.bat`** ni ikki marta bosing. U hammasini

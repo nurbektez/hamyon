@@ -1,0 +1,8 @@
+# Sirlar va mahalliy ma'lumot — hech qachon repoga tushmasin
+.env
+*.db
+*.sqlite
+*.sqlite3
+bot.log
+hisobot.txt
+__pycache__/
