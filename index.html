@@ -25,6 +25,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .hdr-logo span{opacity:.7;font-weight:600}
 .hdr-badge{background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:12px;color:#fff;font-weight:700}
 .hdr-name{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600}
+.hdr-point{display:inline-block;margin-top:7px;background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 11px;font-size:12px;color:#fff;font-weight:700}
 /* BALANCE CARD */
 .bal-card{background:var(--white);border-radius:var(--r);margin:0 16px;margin-top:-14px;padding:18px;box-shadow:var(--shadow);position:relative;z-index:10}
 .bal-lbl{font-size:11px;color:var(--text2);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
@@ -121,6 +122,7 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 .hint{font-size:11px;color:var(--text3);font-weight:700;text-align:center;margin-top:5px}
 .hint b{color:var(--text2)}
 .sbtn{width:100%;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:16px;font-weight:900;padding:15px;cursor:pointer;margin-top:6px;font-family:'Nunito',sans-serif;transition:opacity .2s}
+.sbtn:disabled{opacity:.45;cursor:not-allowed}
 .sbtn:active{opacity:.85}.sbtn.red{background:var(--red)}.sbtn.yellow{background:var(--yellow)}.sbtn.green{background:var(--green)}.sbtn.blue{background:var(--blue)}
 /* NAV */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 16px rgba(0,0,0,0.05)}
@@ -160,6 +162,7 @@ input.sm,select.sm{font-size:15px;font-weight:700}
     <div class="hdr-badge" id="role-badge">...</div>
   </div>
   <div class="hdr-name" id="user-name"></div>
+  <div class="hdr-point" id="hdr-point" style="display:none"></div>
 </div>
 
 <!-- GAZNA -->
@@ -200,8 +203,12 @@ input.sm,select.sm{font-size:15px;font-weight:700}
 <div class="page" id="page-worker">
   <div style="padding:16px">
     <div class="pg-title" style="padding:0 0 14px">📤 Rasxodlar</div>
-    <button class="sbtn green" style="margin-bottom:16px" onclick="openM('expense-modal')">+ Yangi rasxod yuborish</button>
-    <div style="font-size:14px;font-weight:800;margin-bottom:10px">Mening rasxodlarim</div>
+    <div class="svc-warn" id="wk-nopoint" style="display:none">
+      Sizga punkt biriktirilmagan. Rasxod yuborish uchun admin sizni punktga biriktirishi kerak.
+    </div>
+    <button class="sbtn green" id="wk-add-btn" style="margin-bottom:16px" onclick="openM('expense-modal')">+ Yangi rasxod yuborish</button>
+    <div style="font-size:14px;font-weight:800;margin-bottom:4px">Mening rasxodlarim</div>
+    <div class="hint" id="wk-sum" style="text-align:left;margin:0 0 10px"></div>
     <div id="my-exp-list"></div>
   </div>
 </div>
@@ -349,6 +356,7 @@ let UI = {page:'gazna',chiqimAcc:'som',konvDir:'s2u',expCat:'arenda',expCur:'som
 function fS(n){ n=n||0; return Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ') + " so'm"; }
 function fU(n){ n=n||0; return '$ ' + Math.round(n).toLocaleString('ru-RU').replace(/,/g,' '); }
 function fA(acc,n){ return acc==='usd'?fU(n):fS(n); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function nw(){ const d=new Date(); return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}); }
 
 // ── MA'LUMOT YUKLASH ──
@@ -423,7 +431,7 @@ function applyData(data){
 }
 
 function showEmpty(reason){
-  D.role='admin'; D.fullName=''; D.som=0; D.usd=0; D.karta=0;
+  D.role=null; D.fullName=''; D.pointCode=''; D.som=0; D.usd=0; D.karta=0;
   D.stats={kirim_som:0,kirim_usd:0,kirim_karta:0,chiqim_som:0,chiqim_usd:0,chiqim_karta:0};
   D.transactions=[]; D.pending=[]; D.myExpenses=[];
   D.points=[]; D.users=[];
@@ -439,11 +447,30 @@ function setupUI(){
   const badges = {admin:'👑 Admin',director:'👔 Director',cashier:'💰 Kassir',point_worker:'🏪 Punkt'};
   document.getElementById('role-badge').textContent = badges[D.role]||D.role||'—';
   document.getElementById('user-name').textContent = D.fullName||'';
+  renderPointBadge();
   // Punkt select
   const sel = document.getElementById('nu-point');
   sel.innerHTML = (D.points||[]).filter(p=>p.active).map(p=>`<option value="${p.code}">${p.code} — ${p.name}</option>`).join('');
   buildNav();
   showPage(D.role==='point_worker'?'worker':'gazna');
+}
+
+// Punkt xodimi qaysi punktga biriktirilganini header da ko'rsatamiz
+function pointName(code){
+  const p=(D.points||[]).find(x=>x.code===code);
+  return p&&p.name?p.name:'';
+}
+function renderPointBadge(){
+  const el=document.getElementById('hdr-point');
+  if(!el) return;
+  if(D.role!=='point_worker'){ el.style.display='none'; return; }
+  el.style.display='inline-block';
+  if(D.pointCode){
+    const n=pointName(D.pointCode);
+    el.textContent='🏪 '+D.pointCode+(n?' — '+n:'');
+  } else {
+    el.textContent='🏪 Punkt biriktirilmagan';
+  }
 }
 
 function buildNav(){
@@ -519,17 +546,39 @@ function renderPending(){
 }
 
 function renderWorker(){
+  // Punkt biriktirilmagan bo'lsa rasxod yuborib bo'lmaydi
+  const hasPoint=!!D.pointCode;
+  const warn=document.getElementById('wk-nopoint');
+  const btn=document.getElementById('wk-add-btn');
+  if(warn) warn.style.display=hasPoint?'none':'block';
+  if(btn) btn.disabled=!hasPoint;
+
   const el=document.getElementById('my-exp-list');
   if(!el) return;
   const list=D.myExpenses||[];
+  const sum=document.getElementById('wk-sum');
+  if(sum){
+    const c={pending:0,approved:0,rejected:0};
+    list.forEach(e=>{ if(c[e.status]!==undefined) c[e.status]++; });
+    sum.textContent=list.length?`⏳ ${c.pending} kutmoqda • ✅ ${c.approved} tasdiqlangan • ❌ ${c.rejected} rad etilgan`:'';
+  }
   if(!list.length){ el.innerHTML='<div class="empty">Hali yo\'q</div>'; return; }
   const cats={arenda:'🏢 Arenda',oylik:'👷 Oylik',yolkira:"🚗 Yo'lkira",boshqa:'📦 Boshqa'};
   const sico={pending:'⏳',approved:'✅',rejected:'❌'};
-  el.innerHTML=list.map(e=>`
+  const snam={pending:'Kutilmoqda',approved:'Tasdiqlandi',rejected:'Rad etildi'};
+  el.innerHTML=list.map(e=>{
+    const meta=[e.date||'',snam[e.status]||e.status];
+    if(e.status==='rejected'&&e.rejectNote) meta.push('Sabab: '+e.rejectNote);
+    return `
     <div class="list-item">
       <div class="list-ico">${sico[e.status]||'•'}</div>
-      <div class="list-info"><div class="list-title">${cats[e.category]||e.category} — ${fA(e.currency,e.amount)}</div><div class="list-sub">${e.date||''} ${e.status==='rejected'&&e.rejectNote?'• '+e.rejectNote:''}</div></div>
-    </div>`).join('');
+      <div class="list-info">
+        <div class="list-title">${cats[e.category]||esc(e.category)} — ${fA(e.currency,e.amount)}</div>
+        ${e.comment?`<div class="list-sub">📝 ${esc(e.comment)}</div>`:''}
+        <div class="list-sub">${esc(meta.filter(Boolean).join(' • '))}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ── MODAL ──
@@ -620,12 +669,14 @@ function doKonvert(){
 
 // ── EXPENSE ──
 function doExpense(){
+  if(!D.pointCode){ toast('Sizga punkt biriktirilmagan!','err'); return; }
   const amt=parseFloat(document.getElementById('exp-amt').value);
   const izoh=document.getElementById('exp-izoh').value.trim();
   if(!amt||amt<=0){ toast('Miqdor kiriting!','err'); return; }
   if(!izoh){ toast('Izoh kiriting!','err'); return; }
-  sendAction({action:'add_expense',category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh});
-  D.myExpenses.unshift({id:Date.now(),category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh,status:'pending',date:nw()});
+  // Botga yetib bormasa ro'yxatga "yuborildi" deb yozmaymiz
+  if(!sendAction({action:'add_expense',category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh,point_code:D.pointCode})) return;
+  D.myExpenses.unshift({id:Date.now(),pointCode:D.pointCode,category:UI.expCat,currency:UI.expCur,amount:amt,comment:izoh,status:'pending',date:nw()});
   document.getElementById('exp-amt').value=''; document.getElementById('exp-izoh').value='';
   closeAll(); renderWorker(); toast('Director ga yuborildi!','info');
 }
