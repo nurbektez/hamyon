@@ -30,13 +30,64 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 
 function Say($msg, $color = 'Gray') { Write-Host $msg -ForegroundColor $color }
 
+# Papkada bot turibdimi? .env, start_all.ps1 yoki bot.py bo'lsa — ha.
+function Test-BotDir($path) {
+  if (-not $path) { return $false }
+  if (-not (Test-Path $path)) { return $false }
+  foreach ($f in @('.env', 'start_all.ps1', 'bot.py')) {
+    if (Test-Path (Join-Path $path $f)) { return $true }
+  }
+  return $false
+}
+
+# Bot boshqa papkada bo'lsa ham topilsin — foydalanuvchi yo'lni terib o'tirmasin.
+# Skript yonidan, C:\hamyon dan va ularning ichki papkalaridan qidiriladi.
+function Find-BotDir($preferred) {
+  if (Test-BotDir $preferred) { return $preferred }
+
+  $roots = @()
+  if ($PSScriptRoot) { $roots += $PSScriptRoot }
+  $parent = Split-Path $preferred -Parent
+  if ($parent) { $roots += $parent }
+  $roots += 'C:\hamyon'
+  $roots = @($roots | Where-Object { $_ -and (Test-Path $_) } | Select-Object -Unique)
+
+  foreach ($root in $roots) {
+    if (Test-BotDir $root) { return $root }
+    foreach ($sub in @(Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue)) {
+      if (Test-BotDir $sub.FullName) { return $sub.FullName }
+    }
+  }
+  return $null
+}
+
 Say "`n=== Botni GitHub Pages ga ulash ===" 'Cyan'
+
+$foundDir = Find-BotDir $BotDir
+if (-not $foundDir) {
+  # throw emas: PowerShell uni stack trace bilan chiqaradi, foydalanuvchi tushunmaydi.
+  Say ""
+  Say "Bot papkasi topilmadi." 'Red'
+  Say "  Kerak: ichida .env, start_all.ps1 yoki bot.py bo'lgan papka."
+  Say "  Qidirildi: $BotDir"
+  if ($PSScriptRoot) { Say "             $PSScriptRoot" }
+  Say "             C:\hamyon"
+  Say "             va ularning ichki papkalari"
+  Say ""
+  Say "  Yechim: bu faylni bot papkasiga ko'chirib qayta ishga tushiring," 'Yellow'
+  Say "          yoki yo'lni o'zingiz bering:" 'Yellow'
+  Say "          .\botni_pages_ga_ulash.ps1 -BotDir 'C:\bot\papkasi'" 'Yellow'
+  Say ""
+  exit 1
+}
+$autoFound = ($foundDir -ne $BotDir)
+$BotDir = $foundDir
+
 Say "Papka     : $BotDir"
+if ($autoFound) { Say "            (avtomatik topildi)" 'Yellow' }
 Say "Yangi URL : $PagesUrl"
 if (-not $Apply) { Say "Rejim     : SINOV (hech narsa o'zgarmaydi, -Apply qo'shing)" 'Yellow' }
 else             { Say "Rejim     : O'ZGARTIRISH" 'Green' }
-
-if (-not (Test-Path $BotDir)) { throw "Papka topilmadi: $BotDir  (-BotDir bilan boshqa yo'l bering)" }
 
 # ── 1. .env ────────────────────────────────────────────────────────────────
 $envPath = Join-Path $BotDir '.env'

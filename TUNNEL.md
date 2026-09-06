@@ -12,6 +12,24 @@ tunneliga ulangan. Bepul tunnelning kamchiliklari:
 Shu sababdan "tunnel ishlamayapti" muammosi qayta-qayta takrorlanadi. Bu tunnelni
 "tuzatib" bo'lmaydi — uni **olib tashlash** kerak.
 
+## Eng tez yechim — `PAGES_GA_ULASH.bat`
+
+**Belgisi:** mini app ochilganda **Error 1033** (yoki 502 / "tunnel topilmadi") chiqadi.
+Bu Cloudflare tunneli o'lgani — ilovaning o'zida muammo yo'q.
+
+Repodagi `PAGES_GA_ULASH.bat` ni yuklab olib, bot papkasiga qo'ying va ustiga ikki marta bosing.
+U `botni_pages_ga_ulash.ps1` ni chaqiradi (yonida bo'lmasa GitHub'dan o'zi yuklab oladi):
+
+1. avval faqat **nima o'zgarishini ko'rsatadi** — hech narsa yozilmaydi;
+2. `ha` deb tasdiqlagandan keyingina `.env` va `start_all.ps1` ni o'zgartiradi
+   (har biridan `.bak-...` zaxira olinadi) va botni qayta ishga tushiradi.
+
+Bot papkasi `C:\hamyon\miniapp_bot` da bo'lmasa ham topiladi — skript `.env`,
+`start_all.ps1` yoki `bot.py` bor papkani o'zi qidiradi. Topilmasa, nima qilish
+kerakligini ekranga yozadi.
+
+Qolgan bo'limlar — nima uchun shunday va qo'lda qilish tartibi.
+
 ## Nima uchun tunnel endi kerak emas
 
 `index.html` (Mini App frontendi) **hech qanday backendga so'rov yubormaydi**:
