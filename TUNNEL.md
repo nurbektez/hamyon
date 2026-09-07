@@ -14,15 +14,29 @@ Shu sababdan "tunnel ishlamayapti" muammosi qayta-qayta takrorlanadi. Bu tunneln
 
 ## Eng tez yechim — `PAGES_GA_ULASH.bat`
 
-**Belgisi:** mini app ochilganda **Error 1033** (yoki 502 / "tunnel topilmadi") chiqadi.
-Bu Cloudflare tunneli o'lgani — ilovaning o'zida muammo yo'q.
+**Belgisi:** mini app ochilganda **Error 1033** (yoki 502 / "tunnel topilmadi") chiqadi,
+va/yoki **bot chati jim** — botga yozasiz, javob yo'q.
+
+Ikkalasining sababi bitta: tunnel o'lgan. Shunda mini app eski manzildan ochilmaydi,
+webhook esa o'sha o'lik manzilda qotib qoladi va Telegram xabarlarni o'shanga yuboraveradi.
+Ilovaning yoki botning kodida muammo yo'q.
 
 Repodagi `PAGES_GA_ULASH.bat` ni yuklab olib, bot papkasiga qo'ying va ustiga ikki marta bosing.
 U `botni_pages_ga_ulash.ps1` ni chaqiradi (yonida bo'lmasa GitHub'dan o'zi yuklab oladi):
 
 1. avval faqat **nima o'zgarishini ko'rsatadi** — hech narsa yozilmaydi;
-2. `ha` deb tasdiqlagandan keyingina `.env` va `start_all.ps1` ni o'zgartiradi
-   (har biridan `.bak-...` zaxira olinadi) va botni qayta ishga tushiradi.
+2. `ha` deb tasdiqlagandan keyingina ishga kirishadi:
+   - `.env` dagi `WEBAPP_URL` doimiy Pages manziliga almashadi,
+   - qotib qolgan **webhook o'chiriladi** — bot polling'ga qaytadi, chat tiklanadi,
+   - `start_all.ps1` dagi tunnel qatorlari izohga olinadi,
+   - bot qayta ishga tushiriladi.
+
+   Har bir o'zgartirilgan fayldan `.bak-...` zaxira olinadi.
+
+Webhook bosqichi `.env` dagi `BOT_TOKEN` ni o'qiydi. Token ekranga chiqmaydi va
+hech qayerga yozilmaydi — faqat `api.telegram.org` ga so'rov yuborish uchun ishlatiladi.
+Internet bo'lmasa yoki token topilmasa, bu bosqich o'tkazib yuboriladi va qolganlari
+baribir bajariladi.
 
 Bot papkasi `C:\hamyon\miniapp_bot` da bo'lmasa ham topiladi — skript `.env`,
 `start_all.ps1` yoki `bot.py` bor papkani o'zi qidiradi. Topilmasa, nima qilish

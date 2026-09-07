@@ -1,15 +1,19 @@
 @echo off
 chcp 65001 >nul
-title Hamyon - botni doimiy manzilga ulash
+title Hamyon - bot chatini va mini appni tuzatish
 echo.
 echo ==========================================
-echo   Botni GitHub Pages ga ulash
+echo   Hamyon - tuzatish
 echo ==========================================
 echo.
-echo Cloudflare tunneli o'rniga (Error 1033) bot doimiy manzilga ulanadi:
+echo Bu oyna ikkita muammoni birga hal qiladi:
+echo.
+echo   1. Bot chati jim - webhook o'lik tunnel manzilida qotib qolgan
+echo   2. Mini app ochilmaydi (Error 1033) - tunnel o'lgan
+echo.
+echo Ikkalasining sababi bitta: cloudflare tunneli.
+echo Tunnel olib tashlanadi, mini app doimiy manzilga o'tadi:
 echo   https://nurbektez.github.io/hamyon/
-echo.
-echo Bu manzil hech qachon o'zgarmaydi - tunnel butunlay kerak bo'lmaydi.
 echo.
 echo Avval faqat NIMA o'zgarishini ko'rsatadi. Hech narsa yozilmaydi.
 echo.
@@ -21,7 +25,8 @@ if exist "%SCRIPT%" goto :preview
 echo.
 echo Skript yonida yo'q - GitHub'dan yuklab olinmoqda...
 set "SCRIPT=%TEMP%\botni_pages_ga_ulash.ps1"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol='Tls12'; Invoke-WebRequest 'https://raw.githubusercontent.com/nurbektez/hamyon/main/botni_pages_ga_ulash.ps1' -OutFile '%TEMP%\botni_pages_ga_ulash.ps1'"
+set "RAW=https://raw.githubusercontent.com/nurbektez/hamyon"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol='Tls12'; try { Invoke-WebRequest '%RAW%/claude/local-mini-app-edit-46x5db/botni_pages_ga_ulash.ps1' -OutFile '%SCRIPT%' } catch { Invoke-WebRequest '%RAW%/main/botni_pages_ga_ulash.ps1' -OutFile '%SCRIPT%' }"
 if not exist "%SCRIPT%" (
   echo.
   echo Yuklab bo'lmadi. Internetni tekshiring yoki faylni qo'lda yuklang:
@@ -68,4 +73,5 @@ if errorlevel 1 (
 
 echo.
 echo Tayyor. Endi Telegramda botga /start yozing va "Hamyon" tugmasini bosing.
+echo Bot javob bermasa - kompyuterda bot.py ishlab turganini tekshiring.
 pause
